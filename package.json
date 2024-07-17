@@ -2,7 +2,7 @@
   "name": "polynomial-arithmetic",
   "version": "1.0.0",
   "description": "Library for polynomial arithmetic, designed in the context of a Galois Field (GF). Test for primitive & irreducible polynomials alongside essential arithmetic operations such as polynomial multiplication, addition, subtraction and division.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf -rf ./dist/ && tsc"
