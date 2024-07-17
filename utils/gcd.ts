@@ -1,4 +1,4 @@
-import { Polynomial } from "./polynomial-arithmetic"
+import { Polynomial } from "../arithmetic"
 
 // Euclidean GCD of two numbers
 export const gcd = ({r0, r1}: {r0: number, r1: number}) => {

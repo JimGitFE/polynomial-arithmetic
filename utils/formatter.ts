@@ -8,9 +8,9 @@ note: polynomials in GF(2), have coefficients 0 or 1
 
 */
 
-import { Polynomial, PolynomialParameters, PolynomialFormats } from './polynomial-arithmetic';
+import { Polynomial, PolynomialParameters, PolynomialFormats } from '../arithmetic';
 
-// [1,1,1,0,1,1,0,0,1,1] => x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
+/** @returns [1,1,1,0,1,1,0,0,1,1] => x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1  */
 export function coefToString (coefs: number[]): string {
     // Map each coefficient to its term
     let terms = coefs.map((coef, i) => {
@@ -30,7 +30,7 @@ export function coefToString (coefs: number[]): string {
     return terms.join("").replace(/^\+/, '').replace(/(\+|-)/g, (sign)=>sign==="+"?" + ":" - ")
 }
 
-// x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1 => [1,1,1,0,1,1,0,0,1,1]
+/** @returns x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1 => [1,1,1,0,1,1,0,0,1,1]  */
 export const stringToCoef = (coefs: string): number[] => {
     // 1.2 Split the polynomial into terms
     let terms = coefs.split(/(?=[+-])/g);
@@ -54,7 +54,7 @@ export const stringToCoef = (coefs: string): number[] => {
     return coefficients;
 }
 
-// [9,8,7,5,4,1,0] => [1,1,1,0,1,1,0,0,1,1]
+/** @returns [9,8,7,5,4,1,0] => [1,1,1,0,1,1,0,0,1,1]  */
 export const expToCoef = (exponentArr: number[]): (0 | 1|-1)[] => {
     //  1.1 Define arrays with length = polynomial degree + 1
     let coefArr = new Array(Math.abs(Math.max(...exponentArr))+1).fill(0)
@@ -71,13 +71,13 @@ export const expToCoef = (exponentArr: number[]): (0 | 1|-1)[] => {
     return [...coefArr]
 }
 
-// [1,1,1,0,1,1,0,0,1,1] => [9,8,7,5,4,1,0]
+/** @returns [1,1,1,0,1,1,0,0,1,1] => [9,8,7,5,4,1,0]  */
 export const coefToExp = (coefArr: (0 | 1|-1)[]): number[] => {
 
     return coefArr.reduce((all: number[],num,i,arr)=>num===1?[...all, (arr.length - i - 1)]:all,[])
 }
 
-// Remove left zeroes from array, ex. [0,1] => [1]
+/** @returns Remove left zeroes from array, ex. [0,1] => [1]  */
 export const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
     while (poly0[0] == 0) {
         poly0.shift()
@@ -85,7 +85,7 @@ export const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
     return poly0
 }
 
-// Translate Polynomial to all Representations | Formats
+/** @returns Translate Polynomial to all Representations | Formats  */
 export const polyReformat = (poly: PolynomialParameters ): PolynomialFormats => {
 
     // Polynomial Class // [1,0] => [1,0] 

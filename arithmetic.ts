@@ -1,5 +1,5 @@
-import { mod } from "./math";
-import { removeLZero, polyReformat } from "./polynomial-formatter";
+import { mod } from "./utils/math";
+import { removeLZero, polyReformat } from "./utils/formatter";
 
 export type PolynomialFormats = { polynomialString: string, coefficients: (0|1|-1)[], exponents: number[] }
 export type PolynomialParameters = string | (0|1|-1)[] | number[] | Polynomial
