@@ -1,8 +1,8 @@
 
-import { Polynomial, PolynomialParameters } from "./polynomial-arithmetic";
-import { filterDuplicates, arrayMax } from './polynomial-utils';
-import { arrayGcd } from "./gcd";
-import { isPrime } from "./math";
+import { Polynomial, PolynomialParameters } from "./arithmetic";
+import { filterDuplicates, arrayMax } from './utils/polynomial';
+import { arrayGcd } from "./utils/gcd";
+import { isPrime } from "./utils/math";
 
 
 export class FieldPolynomial extends Polynomial {
@@ -139,7 +139,6 @@ export class FieldPolynomial extends Polynomial {
     }
     
 }
-
 
 /*
 

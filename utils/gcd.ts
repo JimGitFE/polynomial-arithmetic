@@ -1,6 +1,17 @@
 import { Polynomial } from "../arithmetic"
 
-// Euclidean GCD of two numbers
+/**
+ * Compute the greatest common divisor of two numbers. 
+ * Method: Euclidean algorithm.
+ * 
+ * @param {number}  r0 - dividend
+ * @param {number}  r1 - divisor
+ * @returns {number} - The greatest common divisor of r0 and r1.
+ * @example
+ * const result = gcd({r0: 10, r1: 5});
+ * console.log(result) // Output: 5
+ * @internal
+ */
 export const gcd = ({r0, r1}: {r0: number, r1: number}) => {
     while (r1 !== 0) {
         [r0, r1] = [r1, r0 % r1]
@@ -8,11 +19,30 @@ export const gcd = ({r0, r1}: {r0: number, r1: number}) => {
     return r0
 }
 
+/**
+ * Compute the least common multiple of two numbers.
+ * @param a
+ * @param b 
+ * @returns {number} - The least common multiple of a and b. 
+ * @example
+ * const result = lcm(12, 18);
+ * console.log(result) // Output: 36
+ * @internal
+ */
 export const lcm = (a: number, b: number): number => {
     return Math.abs(a * b) / gcd({r0: a, r1: b});
 }
 
-// Compute gcd of many numbers, test setwise coprime array
+/**
+ * Compute the greatest common divisor of an array of numbers.
+ * 
+ * @param { number[] } arr - Array of numbers.
+ * @returns { number } - The greatest common divisor of the array.
+ * @example
+ * const result = arrayGcd([10, 5, 15]);
+ * console.log(result) // Output: 5
+ * @internal
+ */
 export const arrayGcd = (arr: number[]) => {
     if (arr.length == 0) {
         return arr[0]
@@ -27,7 +57,19 @@ export const arrayGcd = (arr: number[]) => {
     }
 } 
 
-// Extended Euclidean Aalgorithm, Multiplicative inverse of r0 mod r1
+/**
+ * Compute the multiplicative inverse of two numbers.
+ * Method: Extended Euclidean algorithm (linear congruence).
+ * Use: Testing for setwise coprime numbers.
+ * 
+ * @param {number}  r0 - dividend
+ * @param {number}  r1 - divisor
+ * @returns {number} - The multiplicative inverse of r0 mod r1.
+ * @example
+ * const result = eea({r0: 5, r1: 11});
+ * console.log(result) // Output: 9
+ * @internal
+ */
 export const eea = ({r0, r1}: {r0: number, r1: number}) => { // dividend, divisor
     let t0 = 0, t1 = 1, q, t
     while (r0 > 0) {
@@ -43,16 +85,39 @@ export const eea = ({r0, r1}: {r0: number, r1: number}) => { // dividend, diviso
 }
 
 // return true on array of zeroes, ex. [0,0] => true, [0,1] => false
-export const allZero = (array: number[]): boolean => {
+/**
+ * Check if all numbers in an array are zero.
+ * 
+ * @param { number[] } array - Array of numbers to test.
+ * @returns { boolean } - True if all numbers in the array are zero.
+ * @example
+ * const result = isAllZero([0, 0]);
+ * console.log(result) // Output: true
+ * @internal
+ */
+export const isAllZero = (array: number[]): boolean => {
     return array.every(val => val === 0);
 }
 
 // Euclidean GCD for Polynomials Modulo some number,
 // returns & inputs coefficients array type, ex. [3,0,1] not [2,2,2,1] // 3x^2+1
+/**
+ * Compute the greatest common divisor of two polynomials with optional modulo.
+ * Usage: Polynomials in GF(2) perform modulo 2.
+ * 
+ * @param { Polynomial } p - dividend
+ * @param { Polynomial } q - divisor
+ * @param { number } modulo - Optional modulo value.
+ * @returns { Polynomial } - The greatest common divisor of p and q.
+ * @example
+ * const result = polyGcd({p: [1,1,1], q: [1,1], modulo: 2});
+ * console.log(result) // Output: [1,1]
+ * @deprecated
+ */
 export const polyGcd = ({p,q, modulo = 0}:{p: (0|1|-1)[], q: (0|1|-1)[], modulo?: number}) => {
 
     // 1.1 Loop until remainder is 0, then gcd(p,q) = previous remainder
-    while (!allZero(q)) {
+    while (!isAllZero(q)) {
         let remainder: number[]
 
         // 1.2 Compute Remainder
