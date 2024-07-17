@@ -121,10 +121,7 @@ export const polyGcd = ({p,q, modulo = 0}:{p: (0|1|-1)[], q: (0|1|-1)[], modulo?
         let remainder: number[]
 
         // 1.2 Compute Remainder
-        if (modulo) {remainder = new Polynomial(p).divide(q, modulo).remainder.coefficients}
-        // if (modulo) {remainder = polyDiv({dividend: p, divisor: q, modulo}).remainder}
-        else {remainder = new Polynomial(p).divide(q).remainder.coefficients}
-        // else {remainder = polyDiv({dividend: p, divisor: q}).remainder}
+        remainder = new Polynomial(p).divide(q, modulo).remainder.coefficients
 
         p = q
         q = remainder as (0 | 1 | -1)[] // remainder can contain left zero

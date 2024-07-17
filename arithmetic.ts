@@ -51,7 +51,7 @@ export class Polynomial {
     * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
     * @public
     */
-    divide (divisorParam: PolynomialParameters, modulo: number = 2): {remainder: Polynomial, quotient: Polynomial} {
+    divide (divisorParam: PolynomialParameters, modulo: number = 0): {remainder: Polynomial, quotient: Polynomial} {
         const [dividend, divisor] = [this.coefficients, polyReformat(divisorParam).coefficients]
         let output = [...dividend];
         let normalizer = divisor[0];
