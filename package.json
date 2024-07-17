@@ -1,0 +1,32 @@
+{
+  "name": "polynomial-arithmetic",
+  "version": "1.0.0",
+  "description": "```typescript\r new Polynomial('x^4 -2x^2 + 96')\r ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JimGitFE/polynomial-arithmetic.git"
+  },
+  "keywords": [
+    "polynomial",
+    "finite fields",
+    "galois field",
+    "GF(2)",
+    "polynomial arithmetic",
+    "arithmetic",
+    "operations",
+    "subtraction",
+    "addition",
+    "multiplication",
+    "division"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JimGitFE/polynomial-arithmetic/issues"
+  },
+  "homepage": "https://github.com/JimGitFE/polynomial-arithmetic#readme"
+}
