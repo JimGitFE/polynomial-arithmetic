@@ -6,7 +6,6 @@ import { isPrime } from "./utils/math";
 
 /**
  * FieldPolynomial class with arithmetic methods for polynomials in GF(2).
- * @class
  * @extends Polynomial
  * @example
  * const polynomial = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');

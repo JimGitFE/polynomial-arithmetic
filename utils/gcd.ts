@@ -84,7 +84,6 @@ export const eea = ({r0, r1}: {r0: number, r1: number}) => { // dividend, diviso
     return t0
 }
 
-// return true on array of zeroes, ex. [0,0] => true, [0,1] => false
 /**
  * Check if all numbers in an array are zero.
  * 
@@ -99,8 +98,6 @@ export const isAllZero = (array: number[]): boolean => {
     return array.every(val => val === 0);
 }
 
-// Euclidean GCD for Polynomials Modulo some number,
-// returns & inputs coefficients array type, ex. [3,0,1] not [2,2,2,1] // 3x^2+1
 /**
  * Compute the greatest common divisor of two polynomials with optional modulo.
  * Usage: Polynomials in GF(2) perform modulo 2.

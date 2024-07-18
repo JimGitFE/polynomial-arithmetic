@@ -9,7 +9,7 @@
  * const result = filterDuplicates([1, 2, 3], [3, 4, 5]);
  * console.log(result) // Output: [1, 2, 4, 5]
  * @internal
- */
+*/
 export function filterDuplicates (array1: number[], array2: number[]): number[] {
     
     let set1 = new Set(array1);
@@ -30,7 +30,7 @@ export function filterDuplicates (array1: number[], array2: number[]): number[] 
  * const result = arrayMax([1, 2, 3]);
  * console.log(result) // Output: 3
  * @internal
- */
+*/
 export function arrayMax (array: number[]): number {
     let max = 0;
 
