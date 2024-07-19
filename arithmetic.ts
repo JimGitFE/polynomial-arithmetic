@@ -162,6 +162,23 @@ export class Polynomial {
         return new Polynomial(removeLZero(output));
     }
 
+    gcd (poly: Polynomial, modulo: number = 0): Polynomial {
+        let [p, q]: Polynomial[] = [poly, this]
+
+        // 1.1 Loop until remainder is 0, then gcd(p,q) = previous remainder
+        while (!q.isAllZero()) {
+            let remainder: Polynomial
+    
+            // 1.2 Compute Remainder
+            remainder = p.divide(q, modulo).remainder
+    
+            p = q
+            q = remainder // remainder can contain left zero
+        }
+        
+        return p // p is d / d divides p & q 
+    }
+
     /**
      * Check if coefficients are all zero
      * Use: equivalent of null polynomial
