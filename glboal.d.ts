@@ -1,24 +1,35 @@
 import { Polynomial } from "./arithmetic"
 
 /**
- * Polynomial & FieldPolynomial interpretation formats.
- */
-export type PolynomialFormats = { polynomialString: string, coefficients: (0|1|-1)[], exponents: number[] }
-
-export enum PolynomialFormatsEnum {
-    polynomialString = "polynomialString",
-    coefficients = "coefficients",
-    exponents = "exponents"
-}
-
-
-export interface Formats {
-    polynomialString: string,
-    coefficients: number[],
-    exponents: number[]
+ * Naming of each polynomial representation.
+*/
+enum Namings {
+    polyString = "string",
+    polyCoefficients = "coefficients",
+    polyExponents = "exponents"
 }
 
 /**
- * Accepted argument types in arithmetic methods.
+ * String representation of a polynomial.
+ * @example 'x^2 + x + 1'
+*/
+type polyString = string
+/**
+ * Coefficients representation of a polynomial.
+ * @example [1,1,1] || "x^2 + x + 1"
+ * @example [2,0,1] || "2x^2 + 1"
+*/
+type polyCoefficients = number[]
+/**
+ * Exponents representation of a polynomial.
+ * @example [2,0,1] || "2x^2 + 1"
+ * @example [2,1,0,0] || "x^2 + x + 2"
+*/
+type polyExponents = number[]
+
+/**
+ * Accepted polynomial parameter types in arithmetic methods.
  */
-export type PolynomialParameters = Formats['polynomialString'] | Formats['coefficients'] | Formats['exponents'] | Polynomial
+export type PolynomialParameters = polyString | polyCoefficients | polyExponents | Polynomial
+
+export { polyString, polyCoefficients, polyExponents, Namings }
