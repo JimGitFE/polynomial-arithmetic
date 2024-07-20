@@ -15,7 +15,7 @@ import { isPrime } from "./utils/math";
  */
 export class FieldPolynomial extends Polynomial {
     // Constructor // note. fast works only with exponents
-    constructor(originalPoly: PolynomialParameters, {fast}: {fast?: boolean} = {fast: false}) {
+    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], {fast}: {fast?: boolean} = {fast: false}) {
         super(originalPoly, {onlyExps: fast})
     }
 
@@ -32,8 +32,8 @@ export class FieldPolynomial extends Polynomial {
      * @public 
     */
     divideGF (divisorPoly: FieldPolynomial, {fast}:{fast?:boolean}={fast:false}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
-        const divisor = divisorPoly.exponents
-        let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.exponents], 0] // remainder = dividend
+        const divisor = divisorPoly.polyExponents
+        let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
         let [remainderDeg, divisorDeg] = [arrayMax(remainder), arrayMax(divisor)]
 
         while ((remainderDeg-divisorDeg)>=0 && remainder.length !== 0) {
@@ -65,7 +65,7 @@ export class FieldPolynomial extends Polynomial {
         let intA, intB, intP = 0, modulo = 2;
     
         // 1.1 Convert to integers // [1,0,1] => 5
-        [intA,intB] = [parseInt(this.coefficients.join(''), 2), parseInt(multiplier.coefficients.join(''), 2)]
+        [intA,intB] = [parseInt(this.polyCoefficients.join(''), 2), parseInt(multiplier.polyCoefficients.join(''), 2)]
         
         // 1.2 Bitwise Multiplication
         while ( intB > 0) {
@@ -95,7 +95,7 @@ export class FieldPolynomial extends Polynomial {
     addGF (poly: FieldPolynomial, {fast}:{fast?:boolean} = {}): FieldPolynomial {
 
         // 1.1 Convert to integers & Bitwise Add // [1,0,1] => 5
-        const result = parseInt(this.coefficients.join(''), 2) ^ parseInt(poly.coefficients.join(''), 2)
+        const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(poly.polyCoefficients.join(''), 2)
                 
         // 1.2 Reformat from Integer to coefficients array // ex. 5 => [1,0,1]
         return new FieldPolynomial(result.toString(2).split("").map(str=>Number(str)), {fast})
@@ -124,12 +124,12 @@ export class FieldPolynomial extends Polynomial {
         let q = <FieldPolynomial>this
 
         // 1.1 Loop until remainder is 0, then gcd(p,q) = previous remainder
-        while (q.exponents.length !== 0) {
+        while (q.polyExponents.length !== 0) {
 
             // 1.2 Compute Remainder
             let { remainder } = p.divideGF(q, {fast: true})
             p = q
-            q = new FieldPolynomial(remainder.exponents, {fast: true}) // remainder can contain left zero
+            q = new FieldPolynomial(remainder.polyExponents, {fast: true}) // remainder can contain left zero
         }
         return p // p is d (d divides original p & q)
     }
@@ -145,7 +145,7 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isIrreducible (): boolean {
-        const n = this.exponents[0]
+        const n = this.polyExponents[0]
         let sequence = [2**n] // exponents 2^n, & prime divisor q of n
 
         // 2.1 Compute all common prime divisors of n
@@ -161,13 +161,13 @@ export class FieldPolynomial extends Polynomial {
             if (i !== 0) {
 
                 // 2.3 GCD(f, x^2^(n/q) − x) = 1
-                let gcdRes = this.polyGCD(new FieldPolynomial([exp,1], {fast: true})).exponents
+                let gcdRes = this.polyGCD(new FieldPolynomial([exp,1], {fast: true})).polyExponents
                 if ( gcdRes[gcdRes.length-1] !== 0 ) return false // gcd !== [0]
             } else {
 
                 // 2.4 Divides x^2^n ≡ x mod f // remainder = 0
                 let { remainder } = new FieldPolynomial([exp,1], {fast: true}).divideGF(this, {fast: true})
-                if ( remainder.exponents.length !== 0 ) return false // [] !== []
+                if ( remainder.polyExponents.length !== 0 ) return false // [] !== []
             }
         }
 
@@ -185,7 +185,7 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isPrimitive (): boolean {
-        const n = this.exponents[0] // degree
+        const n = this.polyExponents[0] // degree
         let remainder: number[] = []
 
         // 3.1 Compute prime divisors of (2**n - 1)
@@ -199,12 +199,12 @@ export class FieldPolynomial extends Polynomial {
         // 3.2 For every divisor (d) of (2^n - 1), (x^d mod f(x)) !== 1 => order is not x^d
         for (let i = 0; i < primeDivisors.length; i++) {
             let exponent = primeDivisors[i]
-            remainder = new FieldPolynomial([exponent], {fast: true}).divideGF(this, {fast: true}).remainder.exponents
+            remainder = new FieldPolynomial([exponent], {fast: true}).divideGF(this, {fast: true}).remainder.polyExponents
             if (remainder[remainder.length-1]===0) return false // remainder !== 1
         }
         
         // 3.3 Verify x^(2^n - 1) mod f(x) = 1
-        remainder = new FieldPolynomial([(2**n)-1], {fast: true}).divideGF(this, {fast: true}).remainder.exponents
+        remainder = new FieldPolynomial([(2**n)-1], {fast: true}).divideGF(this, {fast: true}).remainder.polyExponents
         return remainder[remainder.length-1]===0 // remainder === 1
     }
 
@@ -219,7 +219,7 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isSetwiseCoprime (): boolean {
-        return arrayGcd(this.exponents) == 1
+        return arrayGcd(this.polyExponents) == 1
     }
     
 }

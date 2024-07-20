@@ -7,7 +7,7 @@ Coefficients: Array of polynomial term coefficients, x^2 + 1 => [1, 0, 1]
 note: polynomials in GF(2), have coefficients 0 or 1
 
 */
-import { PolynomialParameters, polyString, polyCoefficients, polyExponents } from '../glboal';
+import { PolynomialParameters, polyString, polyCoefficients, polyExponents, Namings } from '../glboal';
 import { Polynomial } from '../arithmetic';
 
 /** 
@@ -141,28 +141,28 @@ export const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
  * console.log(result); // Output: {polynomialString: 'x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1', coefficients: [1,1,1,0,1,1,0,0,1,1], exponents: [9,8,7,5,4,1,0]}
  * @public
  */
-export const polyReformat = (poly: PolynomialParameters ): [polyString, polyCoefficients, polyExponents] => {
+export const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: Namings ): [polyString, polyCoefficients, polyExponents] => {
 
     // Polynomial Class // [1,0] => [1,0] 
-if (poly instanceof Polynomial) {
-    return poly.polyFormats
+    if (poly instanceof Polynomial) {
+        return [poly.polyString, poly.polyCoefficients, poly.polyExponents]
 
-    // String Representation // x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
-} else if (typeof poly === 'string') {
-    return {polynomialString: poly, coefficients: <(0 | 1|-1)[]>stringToCoef(poly), exponents: coefToExp(<(0 | 1|-1)[]>stringToCoef(poly))}
-
-    // Exponent Array Representation // [9,8,7,5,4,1,0]
-} else if (poly.some((term: number) => term>1)) {
-    return {polynomialString: coefToString(expToCoef(poly)), coefficients: expToCoef(poly), exponents: poly}
-    
-    // Coefficient Array Representation // [1,1,1,0,1,1,0,0,1,1]
-} else if (poly.every((coef: number) => [0, 1, -1].includes(coef))) {
-    return {polynomialString: coefToString(poly), coefficients: <(0|1|-1)[]>poly, exponents: coefToExp(<(0|1|-1)[]>poly)}
-    
-    // Invalid
-} else {
-    let str = 'Invalid Polynomial Format'+ poly
-    throw new Error(String(str))
-}
+        // String Representation // x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
+    } else if (formatType?formatType === Namings.polyString: typeof poly === 'string') {
+        return [<polyString>poly, stringToCoef(<polyString>poly), coefToExp(<(0 | 1|-1)[]>stringToCoef(<polyString>poly)) ]
+        
+        // Coefficient Array Representation // [1,1,1,0,1,1,0,0,1,1]
+    } else if (formatType?formatType === Namings.polyCoefficients: true) {
+        return [coefToString(<polyCoefficients>poly), <polyCoefficients>poly, coefToExp(<polyCoefficients>poly) ]
+        
+        // Exponent Array Representation // [9,8,7,5,4,1,0]
+    } else if (formatType === Namings.polyExponents) { // isDescending(<polyExponents>poly) - [2,1,0] = (2x^2 +x +1 || x^2 + x + 1)
+        return [coefToString(expToCoef(<polyExponents>poly)), expToCoef(<polyExponents>poly), <polyExponents>poly ]
+        
+        // Invalid
+    } else {
+        let str = 'Invalid Polynomial Format'+ poly
+        throw new Error(String(str))
+    }
 
 }

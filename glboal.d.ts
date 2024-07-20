@@ -30,6 +30,11 @@ type polyExponents = number[]
 /**
  * Accepted polynomial parameter types in arithmetic methods.
  */
-export type PolynomialParameters = polyString | polyCoefficients | polyExponents | Polynomial
+export interface PolynomialParameters {
+    polyString: polyString;
+    polyCoefficients: polyCoefficients;
+    polyExponents: polyExponents;
+    Polynomial: Polynomial;
+}
 
 export { polyString, polyCoefficients, polyExponents, Namings }
