@@ -50,8 +50,8 @@ export function coefToString (coefs: polyCoefficients): polyString {
  * @internal
  */
 export const stringToCoef = (polyStr: polyString): polyCoefficients => {
-    // 1.2 Split the polynomial into terms
-    let terms = polyStr.split(/(?=[+-])/g);
+    // 1.2 Trim & split the polynomial into terms
+    let terms = polyStr.replace(/\s/g, '').split(/(?=[+-])/g);
 
     // 1.3 Find the highest exponent
     let highestExponent = Math.max(...terms.map(term => parseInt(term.split('^')[1]) || (term.includes("x")?1:0)));
@@ -61,10 +61,10 @@ export const stringToCoef = (polyStr: polyString): polyCoefficients => {
 
     // 1.4 For each term, update the corresponding coefficient in the array
     for (let term of terms) {
-        let parts = term.split('x'); // "-2x^9" => ["-2", "^9"]
+        let [coef, exp] = term.split('x'); // " - 2x^ 9" => ["-2", "^9"]
         
-        let exponent = parseInt( parts[1]!==undefined ? (parts[1].split("^")[1] || "1") : "0" );
-        let coefficient = parseInt(parts[0]) || (parts[0].startsWith('-') ? -1 : 1);
+        let exponent = parseInt( (exp===""?"1":exp?.split("^")[1]) || "0" );
+        let coefficient = parseInt(coef) || (coef.startsWith('-') ? -1 : 1);
         
         coefficients[highestExponent - exponent] = coefficient;
     }
