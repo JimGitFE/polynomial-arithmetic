@@ -29,7 +29,7 @@ export function coefToString (coefs: polyCoefficients): polyString {
             let exp = coefs.length - i - 1;
             // absolute coefficient, if 1|-1 dont display it unless constant term
             let coefficient = Math.abs(exp>0?(Math.abs(coef)!==1?coef:0):coef) || "" // Math.abs("") = 0
-            let exponent = exp>0?`x^${exp}`:""
+            let exponent = exp!==0?`x${exp!==1?"^"+exp:""}`:""
 
             return (coef > 0 ? '+' : '-') + coefficient + exponent;
         }
