@@ -17,28 +17,28 @@ const polynomial = new Polynomial('x^4 - 2x^2 + 96')
 
 // Division
 result = polynomial.divide("x^2 + 1")
-console.log(result.quotient.polynomialString) // x^2 - 3
-console.log(result.remainder.polynomialString) // 99
+console.log(result.quotient.polyString) // x^2 - 3
+console.log(result.remainder.polyString) // 99
 
 // Addition
 result = result.quotient.add("4x^2 + 1")
-console.log(result.polynomialString) // 5x^2 - 2
+console.log(result.polyString) // 5x^2 - 2
 
 // Multiplication
 result = result.multiply("x^2 + 1")
-console.log(result.polynomialString) // 5x^4 + 3x^2 - 2
+console.log(result.polyString) // 5x^4 + 3x^2 - 2
 
 // Subtraction
 result = result.sub("x^4 - x^2 - 2")
-console.log(result.polynomialString) // 4x^4 + 4x^2
+console.log(result.polyString) // 4x^4 + 4x^2
 
 // Greatest Common Divisor
 result = result.gcd("x^2 + 1")
-console.log(result.polynomialString) // x^2 + 1
+console.log(result.polyString) // x^2 + 1
 
 // Derivative
 result = result.derivative()
-console.log(result.polynomialString) // 2x
+console.log(result.polyString) // 2x
 ```
 ###
 Long division of polynomials, enables computing modular arithmetic of a polynomial f(x) with a polynomial g(x) as modulus by dividing f(x) into g(x) and keeping the remainder. Furthermore if p(x) divides f(x) then the greatest common divisor is p(x) itself.
@@ -52,20 +52,20 @@ const polynomial = new FieldPolynomial('x^4 - x^2 + 1')
 
 // Division
 result = polynomial.divideGF("x^2 + 1")
-console.log(result.quotient.polynomialString) // x^2
-console.log(result.remainder.polynomialString) // 1
+console.log(result.quotient.polyString) // x^2
+console.log(result.remainder.polyString) // 1
 
 // XOR Addition
 result = result.quotient.addGF("x^3 + x^2 + 1")
-console.log(result.polynomialString) // x^3 + 1
+console.log(result.polyString) // x^3 + 1
 
 // AND Multiplication
 result = result.multiplyGF("x^2 + 1")
-console.log(result.polynomialString) // x^5 + x^3 + x^2 + 1
+console.log(result.polyString) // x^5 + x^3 + x^2 + 1
 
 // XOR Subtraction
 result = result.subGF("x^2 + 1")
-console.log(result.polynomialString) // x^5 + x^3
+console.log(result.polyString) // x^5 + x^3
 ```
 
 Bitwise optimized methods for polynomial arithmetic in GF(2) where coefficients are either 0 or 1, example: x^10 + x.Enabling efficient computation. Multiplication, bitwise AND, bit [Carry-Less Product](https://en.wikipedia.org/wiki/Carry-less_product) method. Subtraction & Addition both share the same method & result. XOR (bit exclusive OR) operation.
