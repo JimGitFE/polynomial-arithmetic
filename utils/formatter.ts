@@ -7,7 +7,7 @@ Coefficients: Array of polynomial term coefficients, x^2 + 1 => [1, 0, 1]
 note: polynomials in GF(2), have coefficients 0 or 1
 
 */
-import { PolynomialParameters, polyString, polyCoefficients, polyExponents, Namings } from '../glboal';
+import { PolynomialParameters } from '../types';
 import { Polynomial } from '../arithmetic';
 
 /** 
