@@ -12,33 +12,34 @@ Main use cases: Maximum length sequence (m-sequence) polynomial taps in Linear F
 ## Arithmetic Methods
 
 ```typescript
-let result;
-const polynomial = new Polynomial('x^4 - 2x^2 + 96')
-
-// Division
-result = polynomial.divide("x^2 + 1")
-console.log(result.quotient.polyString) // x^2 - 3
-console.log(result.remainder.polyString) // 99
-
 // Addition
-result = result.quotient.add("4x^2 + 1")
-console.log(result.polyString) // 5x^2 - 2
+const addend = new Polynomial("8x^4+32x-12");
+const sum = addend.add("-x^5-16x+6")
+console.log(sum.polyString) // - x^5 + 8x^4 + 16x - 6
 
 // Multiplication
-result = result.multiply("x^2 + 1")
-console.log(result.polyString) // 5x^4 + 3x^2 - 2
+const term = new Polynomial("- x^5 + 8x^4 + 16x - 6")
+const product = term.multiply("4x^2+8")
+console.log(product.polyString) // - 4x^7 + 32x^6 - 8x^5 + 64x^4 + 64x^3 - 24x^2 + 128x - 48
 
 // Subtraction
-result = result.sub("x^4 - x^2 - 2")
-console.log(result.polyString) // 4x^4 + 4x^2
+const minuend = new Polynomial("- 4x^7 + 32x^6 - 8x^5 + 64x^4 + 64x^3 - 24x^2 + 128x - 48")
+const difference = minuend.sub("-4x^7 - 8x^5 + 64x^3 + 128x - 48")
+console.log(difference.polyString) // 32x^6 + 64x^4 - 24x^2
+
+// Division
+const dividend = new Polynomial("32x^6 + 64x^4 - 24x^2")
+const {quotient, remainder} = dividend.divide("8x^2")
+console.log(quotient.polyString) // 4x^4 + 8x^2 - 3
 
 // Greatest Common Divisor
-result = result.gcd("x^2 + 1")
-console.log(result.polyString) // x^2 + 1
+const poly1 = new Polynomial("8x^4+32x-12")
+const gcd = poly1.gcd(quotient) // - 3
+console.log(gcd.polyString)
 
 // Derivative
-result = result.derivative()
-console.log(result.polyString) // 2x
+const poly = new Polynomial("8x^4+32x-12")
+console.log(poly.derivative().polyString) // // 32x^3 + 32
 ```
 ###
 Long division of polynomials, enables computing modular arithmetic of a polynomial f(x) with a polynomial g(x) as modulus by dividing f(x) into g(x) and keeping the remainder. Furthermore if p(x) divides f(x) then the greatest common divisor is p(x) itself.
