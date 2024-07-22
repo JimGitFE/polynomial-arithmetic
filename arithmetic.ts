@@ -1,6 +1,6 @@
 import { mod } from "./utils/math";
 import { removeLZero, polyReformat } from "./utils/formatter";
-import { PolynomialParameters, polyCoefficients, polyExponents, polyString } from "./glboal";
+import { PolynomialParameters } from './types';
 
 /** 
  * Polynomial class with arithmetic methods.
@@ -122,7 +122,8 @@ export class Polynomial {
         let output = new Array(Math.max(a.length, b.length)).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = (a[i] || 0) + (b[i] || 0);
+            let [ai, bi] = [a[a.length-i-1],b[b.length-i-1]]
+            output[output.length-i-1] = (ai || 0) + (bi || 0);
         }
     
         return new Polynomial(removeLZero(output));
@@ -144,7 +145,8 @@ export class Polynomial {
         let output = new Array(Math.max(a.length, b.length)).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = (a[i] || 0) - (b[i] || 0);
+            let [ai, bi] = [a[a.length-i-1],b[b.length-i-1]]
+            output[output.length-i-1] = (ai || 0) - (bi || 0);
         }
     
         return new Polynomial(removeLZero(output));
@@ -163,7 +165,7 @@ export class Polynomial {
         let output = new Array(this.polyCoefficients.length - 1).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = this.polyCoefficients[i + 1] * (i + 1);
+            output[i] = this.polyCoefficients[i] * (this.polyCoefficients.length - 1 - i);
         }
     
         return new Polynomial(removeLZero(output));
