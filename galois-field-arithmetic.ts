@@ -1,4 +1,4 @@
-import { PolynomialParameters } from "./glboal";
+import { PolynomialParameters } from './types';
 import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
