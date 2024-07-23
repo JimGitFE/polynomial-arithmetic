@@ -20,7 +20,9 @@ import { Polynomial } from '../arithmetic';
  * console.log(formatted); // Output: "x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1"
  * @internal
 */
-export function coefToString (coefs: polyCoefficients): polyString {
+function coefToString (coefs: polyCoefficients): polyString {
+    // handle neutral
+    if (coefs.length===0 || JSON.stringify(coefs)==="[0]") return "0"
     // Map each coefficient to its term
     let terms = coefs.map((coef, i) => {
         if (coef === 0) {
@@ -49,7 +51,7 @@ export function coefToString (coefs: polyCoefficients): polyString {
  * console.log(formatted) // Output: [1,1,1,0,1,1,0,0,1,1]
  * @internal
  */
-export const stringToCoef = (polyStr: polyString): polyCoefficients => {
+const stringToCoef = (polyStr: polyString): polyCoefficients => {
     // 1.2 Trim & split the polynomial into terms
     let terms = polyStr.replace(/\s/g, '').split(/(?=[+-])/g);
 
@@ -61,10 +63,11 @@ export const stringToCoef = (polyStr: polyString): polyCoefficients => {
 
     // 1.4 For each term, update the corresponding coefficient in the array
     for (let term of terms) {
+        if (term === '') continue; // Only Independent term => [0]
         let [coef, exp] = term.split('x'); // " - 2x^ 9" => ["-2", "^9"]
         
         let exponent = parseInt( (exp===""?"1":exp?.split("^")[1]) || "0" );
-        let coefficient = parseInt(coef) || (coef.startsWith('-') ? -1 : 1);
+        let coefficient = !isNaN(parseInt(coef)) ? (parseInt(coef)) : (coef.startsWith('-') ? -1 : 1); // "0" => 0
         
         coefficients[highestExponent - exponent] = coefficient;
     }
@@ -82,9 +85,10 @@ export const stringToCoef = (polyStr: polyString): polyCoefficients => {
  * console.log(formatted) // Output: [1,1,1,0,1,1,0,0,1,1]
  * @internal
 */
-export const expToCoef = (exponentArr: polyExponents): polyCoefficients => {
+const expToCoef = (exponentArr: polyExponents): polyCoefficients => {
     //  1.1 Define arrays with length = polynomial degree + 1
-    let coefArr = new Array(Math.abs(Math.max(...exponentArr))+1).fill(0)
+    const degree = exponentArr.length !== 0 ? Math.abs(Math.max(...exponentArr)) : 0
+    let coefArr = new Array(degree + 1).fill(0)
 
     //  1.2 Add 1 at each exponent positions, ex. [1,1] => [2,0]
     exponentArr.forEach((exp) => {
@@ -100,6 +104,7 @@ export const expToCoef = (exponentArr: polyExponents): polyCoefficients => {
 
 /** 
  * Formats from array of coefficients to array of exponents.
+ * note: only supports whole numbers
  * 
  * @param { polyCoefficients } coefArr - Polynomial to format. Example: [1,1,1,0,1,1,0,0,1,1]
  * @returns { polyExponents } - The formatted polynomial. Example: [9,8,7,5,4,1,0]  
@@ -108,9 +113,9 @@ export const expToCoef = (exponentArr: polyExponents): polyCoefficients => {
  * console.log(formatted) // Output: [9,8,7,5,4,1,0]
  * @internal
 */
-export const coefToExp = (coefArr: polyCoefficients): polyExponents => {
-
-    return coefArr.reduce((all: polyCoefficients, num, i, arr) => num===1?[...all, (arr.length - i - 1)]:all,[])
+const coefToExp = (coefArr: polyCoefficients): polyExponents => {
+    
+    return coefArr.reduce((all: number[], num, i, arr) => Math.round(num)===num?[...all, ...Array(Math.abs(num)).fill( Math.sign(num) * (arr.length - i - 1) )]:all,[])
 }
 
 /** 
@@ -123,7 +128,7 @@ export const coefToExp = (coefArr: polyCoefficients): polyExponents => {
  * console.log(formatted) // Output: [1]
  * @internal
 */
-export const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
+const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
     while (poly0[0] == 0) {
         poly0.shift()
     }
@@ -141,7 +146,7 @@ export const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
  * console.log(result); // Output: {polynomialString: 'x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1', coefficients: [1,1,1,0,1,1,0,0,1,1], exponents: [9,8,7,5,4,1,0]}
  * @public
  */
-export const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: Namings ): [polyString, polyCoefficients, polyExponents] => {
+const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: Namings ): [polyString, polyCoefficients, polyExponents] => {
 
     // Polynomial Class // [1,0] => [1,0] 
     if (poly instanceof Polynomial) {
@@ -166,3 +171,5 @@ export const polyReformat = (poly: PolynomialParameters[keyof PolynomialParamete
     }
 
 }
+
+export { coefToString, stringToCoef, expToCoef, coefToExp, removeLZero, polyReformat }
