@@ -3,6 +3,7 @@ import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
 import { isPrime } from "./utils/math";
+import { polyFormats } from './types/enums';
 
 /**
  * FieldPolynomial class with arithmetic methods for polynomials in GF(2).
@@ -15,8 +16,8 @@ import { isPrime } from "./utils/math";
  */
 export class FieldPolynomial extends Polynomial {
     // Constructor // note. fast works only with exponents
-    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], {fast}: {fast?: boolean} = {fast: false}) {
-        super(originalPoly, {onlyExps: fast})
+    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], {skipFormat, polyType}: {skipFormat?: boolean, polyType?: polyFormats} = {}) {
+        super(originalPoly, {skipFormat, polyType})
     }
 
     /**
@@ -32,8 +33,9 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result2.remainder.polyString) // Output: 1
      * @public 
     */
-    divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters]): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
-        const divisor = new FieldPolynomial(divisorPoly, {fast: true}).polyExponents
+    divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat, paramType}:{skipFormat?:boolean, paramType?: polyFormats} = {}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
+        const polyType = (skipFormat || paramType) ? (paramType || polyFormats.polyExponents) : undefined // when parameter not of type FieldPolynomial
+        const divisor = new FieldPolynomial(divisorPoly, {skipFormat, polyType}).polyExponents
         let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
         let [remainderDeg, divisorDeg] = [arrayMax(remainder), arrayMax(divisor)]
 
@@ -50,7 +52,7 @@ export class FieldPolynomial extends Polynomial {
             i++, remainderDeg = arrayMax(remainder)
         }
         
-        return {quotient: new FieldPolynomial(quotient, {fast: true}), remainder: new FieldPolynomial(remainder, {fast: true})}
+        return {quotient: new FieldPolynomial(quotient, {skipFormat, polyType: polyFormats.polyExponents}), remainder: new FieldPolynomial(remainder, {skipFormat, polyType: polyFormats.polyExponents})}
     }
 
     /**
@@ -65,11 +67,11 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polyString) // Output: x^7 + x^6 + x^4 + x^3 + 1
      * @public 
     */
-    multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {fast}:{fast?:boolean} = {}): FieldPolynomial {
+    multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:{skipFormat?:boolean} = {}): FieldPolynomial {
         let intA, intB, intP = 0, modulo = 2;
     
         // 1.1 Convert to integers // [1,0,1] => 5
-        [intA,intB] = [parseInt(this.polyCoefficients.join(''), 2), parseInt(new FieldPolynomial(multiplier, {fast}).polyCoefficients.join(''), 2)]
+        [intA,intB] = [parseInt(this.polyCoefficients.join(''), 2), parseInt(new FieldPolynomial(multiplier, {skipFormat}).polyCoefficients.join(''), 2)]
         
         // 1.2 Bitwise Multiplication
         while ( intB > 0) {
@@ -81,7 +83,7 @@ export class FieldPolynomial extends Polynomial {
             intB >>= 1;
             intA <<= 1;
         }
-        return new FieldPolynomial(intP.toString(2).split("").map(str=>Number(str), {fast}))
+        return new FieldPolynomial(intP.toString(2).split("").map(str=>Number(str)), {skipFormat})
     }
 
     /**
@@ -96,13 +98,13 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polyString) // Output: x^4 + x^2 + 1
      * @public
      */
-    addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {fast}:{fast?:boolean} = {}): FieldPolynomial {
+    addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:{skipFormat?:boolean} = {}): FieldPolynomial {
 
         // 1.1 Convert to integers & Bitwise Add // [1,0,1] => 5
-        const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(new FieldPolynomial(poly, {fast}).polyCoefficients.join(''), 2)
+        const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(new FieldPolynomial(poly, {skipFormat}).polyCoefficients.join(''), 2)
                 
         // 1.2 Reformat from Integer to coefficients array // ex. 5 => [1,0,1]
-        return new FieldPolynomial(result.toString(2).split("").map(str=>Number(str)), {fast})
+        return new FieldPolynomial(result.toString(2).split("").map(str=>Number(str)), {skipFormat})
     }
     /**
      * Compute the subtraction of two polynomials.
@@ -131,9 +133,9 @@ export class FieldPolynomial extends Polynomial {
         while (q.polyExponents.length !== 0) {
 
             // 1.2 Compute Remainder
-            let { remainder } = p.divideGF(q, {fast: true})
+            let { remainder } = p.divideGF(q, {skipFormat: true})
             p = q
-            q = new FieldPolynomial(remainder.polyExponents, {fast: true}) // remainder can contain left zero
+            q = new FieldPolynomial(remainder.polyExponents, {skipFormat: true}) // remainder can contain left zero
         }
         return p // p is d (d divides original p & q)
     }
@@ -165,12 +167,12 @@ export class FieldPolynomial extends Polynomial {
             if (i !== 0) {
 
                 // 2.3 GCD(f, x^2^(n/q) − x) = 1
-                let gcdRes = this.polyGCD(new FieldPolynomial([exp,1], {fast: true})).polyExponents
+                let gcdRes = this.polyGCD(new FieldPolynomial([exp,1], {skipFormat: true})).polyExponents
                 if ( gcdRes[gcdRes.length-1] !== 0 ) return false // gcd !== [0]
             } else {
 
                 // 2.4 Divides x^2^n ≡ x mod f // remainder = 0
-                let { remainder } = new FieldPolynomial([exp,1], {fast: true}).divideGF(this, {fast: true})
+                let { remainder } = new FieldPolynomial([exp,1], {skipFormat: true}).divideGF(this, {skipFormat: true})
                 if ( remainder.polyExponents.length !== 0 ) return false // [] !== []
             }
         }
@@ -203,12 +205,12 @@ export class FieldPolynomial extends Polynomial {
         // 3.2 For every divisor (d) of (2^n - 1), (x^d mod f(x)) !== 1 => order is not x^d
         for (let i = 0; i < primeDivisors.length; i++) {
             let exponent = primeDivisors[i]
-            remainder = new FieldPolynomial([exponent], {fast: true}).divideGF(this, {fast: true}).remainder.polyExponents
+            remainder = new FieldPolynomial([exponent], {skipFormat: true}).divideGF(this, {skipFormat: true}).remainder.polyExponents
             if (remainder[remainder.length-1]===0) return false // remainder !== 1
         }
         
         // 3.3 Verify x^(2^n - 1) mod f(x) = 1
-        remainder = new FieldPolynomial([(2**n)-1], {fast: true}).divideGF(this, {fast: true}).remainder.polyExponents
+        remainder = new FieldPolynomial([(2**n)-1], {skipFormat: true}).divideGF(this, {skipFormat: true}).remainder.polyExponents
         return remainder[remainder.length-1]===0 // remainder === 1
     }
 

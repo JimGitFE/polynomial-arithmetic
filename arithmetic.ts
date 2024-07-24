@@ -1,6 +1,7 @@
 import { mod } from "./utils/math";
 import { removeLZero, polyReformat } from "./utils/formatter";
 import { PolynomialParameters } from './types';
+import { polyFormats } from "./types/enums";
 
 /** 
  * Polynomial class with arithmetic methods.
@@ -19,14 +20,15 @@ export class Polynomial {
     
     constructor(
             originalPolynomial: PolynomialParameters[keyof PolynomialParameters], 
-            {onlyExps, formatType}: {onlyExps?: boolean, formatType?: string} = {onlyExps: false}
+            {skipFormat = false, polyType, onlyExps = false, formatType}: {skipFormat?: boolean, polyType?: polyFormats, onlyExps?: boolean, formatType?: string} = {}
         ) {
-        if (onlyExps) {
+        if (onlyExps || skipFormat) {
             // this.polyFormats = {coefficients: [], exponents: <number[]>originalPolynomial, polynomialString: ""}
             [this.polyString, this.polyCoefficients, this.polyExponents] = ["",<polyExponents>originalPolynomial,[]]
         } else {
             // this.polyFormats = polyReformat(originalPolynomial)
-            [this.polyString, this.polyCoefficients, this.polyExponents] = polyReformat(originalPolynomial)
+            [this.polyString, this.polyCoefficients, this.polyExponents] = polyReformat(originalPolynomial, polyType)
+            console.log("receiveddd stuff:   asddsa",skipFormat, onlyExps) // is skipFormat defaulting to false or is the whole object {}
         }
         // Assign formats to class properties directly from nested object property
         // [this.coefficients, this.exponents, this.polynomialString] = [this.polyFormats.coefficients, this.polyFormats.exponents, this.polyFormats.polynomialString]

@@ -9,6 +9,7 @@ note: polynomials in GF(2), have coefficients 0 or 1
 */
 import { PolynomialParameters } from '../types';
 import { Polynomial } from '../arithmetic';
+import { polyFormats } from '../types/enums';
 
 /** 
  * Formats from array of coefficients to polynomial String.
@@ -146,22 +147,22 @@ const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
  * console.log(result); // Output: {polynomialString: 'x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1', coefficients: [1,1,1,0,1,1,0,0,1,1], exponents: [9,8,7,5,4,1,0]}
  * @public
  */
-const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: Namings ): [polyString, polyCoefficients, polyExponents] => {
+const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: polyFormats ): [polyString, polyCoefficients, polyExponents] => {
 
     // Polynomial Class // [1,0] => [1,0] 
     if (poly instanceof Polynomial) {
         return [poly.polyString, poly.polyCoefficients, poly.polyExponents]
 
         // String Representation // x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
-    } else if (formatType?formatType === Namings.polyString: typeof poly === 'string') {
+    } else if (formatType?formatType === polyFormats.polyString: typeof poly === 'string') {
         return [<polyString>poly, stringToCoef(<polyString>poly), coefToExp(<(0 | 1|-1)[]>stringToCoef(<polyString>poly)) ]
         
         // Coefficient Array Representation // [1,1,1,0,1,1,0,0,1,1]
-    } else if (formatType?formatType === Namings.polyCoefficients: true) {
+    } else if (formatType?formatType === polyFormats.polyCoefficients: true) {
         return [coefToString(<polyCoefficients>poly), <polyCoefficients>poly, coefToExp(<polyCoefficients>poly) ]
         
         // Exponent Array Representation // [9,8,7,5,4,1,0]
-    } else if (formatType === Namings.polyExponents) { // isDescending(<polyExponents>poly) - [2,1,0] = (2x^2 +x +1 || x^2 + x + 1)
+    } else if (formatType === polyFormats.polyExponents) { // isDescending(<polyExponents>poly) - [2,1,0] = (2x^2 +x +1 || x^2 + x + 1)
         return [coefToString(expToCoef(<polyExponents>poly)), expToCoef(<polyExponents>poly), <polyExponents>poly ]
         
         // Invalid
