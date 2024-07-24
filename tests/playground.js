@@ -66,29 +66,23 @@ console.log("diff: ",difference.polyString) // x^5 + x^3
 // Generate High Degree LFSR Feddback shift register Polynomial
 // const gateTapsPoly = new FieldPolynomial("x^5 + x^3 + 1");
 // const gateTapsPoly = new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1");
-// const p = new FieldPolynomial("x^16 + x^15 + x^13 + x^4 + 1");
-
-// const p = new FieldPolynomial("x^16 + x^5 + x^3 + x^1 + 1");
-// const p = new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1")
-const p = new FieldPolynomial("x^16 + x^15 x^13 + x^4 + 1")
-
+// const p = new FieldPolynomial("x^16+x^15+x^13+x^4+1");
 // const p = new FieldPolynomial("x^4+x^3+1");
 // const q = new FieldPolynomial("x^65536 + x");
 
-// const p = new FieldPolynomial("x^4+x^3+1")
-// const q = new FieldPolynomial("x^3 + x")
+const p = new FieldPolynomial("x^4+x^3+1")
+const q = new FieldPolynomial("x^3 + x")
 
-// // console.log("gcd",p.polyGCD(q))
 // console.log("gcd",p.polyGCD(q))
-// console.log("gcd",q.polyGCD(p))
+console.log("gcd",p.polyGCD(q))
+console.log("gcd",q.polyGCD(p))
 // console.log("gcd",q.divideGF([ 1, 1, 0, 0, 1 ]))
 
 
 
 // // Properties of a Maximum Length Sequence LFSR polynomial taps feed
-const irreducible = p.isIrreducible();
-const primitive = p.isPrimitive();
-const setwise = p.isSetwiseCoprime();
+// const irreducible = gateTapsPoly.isIrreducible();
+// const primitive = gateTapsPoly.isPrimitive();
+// const setwise = gateTapsPoly.isSetwiseCoprime();
 
-console.log(irreducible, primitive, setwise)
-// console.log(primitive)
+// console.log(irreducible, primitive, setwise)

@@ -225,6 +225,7 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isSetwiseCoprime (): boolean {
+        console.log(this)
         return arrayGcd(this.polyExponents) == 1
     }
     

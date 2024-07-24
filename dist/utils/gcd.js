@@ -88,6 +88,7 @@ const eea = ({ r0, r1 }) => {
     return t0;
 };
 exports.eea = eea;
+// return true on array of zeroes, ex. [0,0] => true, [0,1] => false
 /**
  * Check if all numbers in an array are zero.
  *
@@ -102,6 +103,8 @@ const isAllZero = (array) => {
     return array.every(val => val === 0);
 };
 exports.isAllZero = isAllZero;
+// Euclidean GCD for Polynomials Modulo some number,
+// returns & inputs coefficients array type, ex. [3,0,1] not [2,2,2,1] // 3x^2+1
 /**
  * Compute the greatest common divisor of two polynomials with optional modulo.
  * Usage: Polynomials in GF(2) perform modulo 2.
@@ -120,7 +123,14 @@ const polyGcd = ({ p, q, modulo = 0 }) => {
     while (!(0, exports.isAllZero)(q)) {
         let remainder;
         // 1.2 Compute Remainder
-        remainder = new arithmetic_1.Polynomial(p).divide(q, modulo).remainder.polyCoefficients;
+        if (modulo) {
+            remainder = new arithmetic_1.Polynomial(p).divide(q, modulo).remainder.coefficients;
+        }
+        // if (modulo) {remainder = polyDiv({dividend: p, divisor: q, modulo}).remainder}
+        else {
+            remainder = new arithmetic_1.Polynomial(p).divide(q).remainder.coefficients;
+        }
+        // else {remainder = polyDiv({dividend: p, divisor: q}).remainder}
         p = q;
         q = remainder; // remainder can contain left zero
     }

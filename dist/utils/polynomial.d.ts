@@ -9,7 +9,7 @@
  * const result = filterDuplicates([1, 2, 3], [3, 4, 5]);
  * console.log(result) // Output: [1, 2, 4, 5]
  * @internal
-*/
+ */
 export declare function filterDuplicates(array1: number[], array2: number[]): number[];
 /**
  * Find the maximum value in an array.
@@ -20,6 +20,6 @@ export declare function filterDuplicates(array1: number[], array2: number[]): nu
  * const result = arrayMax([1, 2, 3]);
  * console.log(result) // Output: 3
  * @internal
-*/
+ */
 export declare function arrayMax(array: number[]): number;
 //# sourceMappingURL=polynomial.d.ts.map

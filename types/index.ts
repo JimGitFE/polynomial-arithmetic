@@ -1,6 +1,6 @@
-import type { Polynomial } from "../arithmetic"
-import type { FieldPolynomial } from "../galois-field-arithmetic";
-import type { polyFormats } from "./enums";
+import { Polynomial } from "../arithmetic"
+import { FieldPolynomial } from "../galois-field-arithmetic";
+import { polyFormats } from "./enums";
 
 /**
  * Accepted parameter polynomial types in arithmetic methods.

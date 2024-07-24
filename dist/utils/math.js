@@ -51,10 +51,10 @@ const mod = function (num, modulo) {
     return ((num % modulo) + modulo) % modulo;
 };
 exports.mod = mod;
+// power (a ⋅ b) mod m = [(a mod m) ⋅ (b mod m)] mod m
 /**
  * Compute the power of a number modulo another number.
  * Method: Binary bitwise exponentiation, enables high exponent calculation.
- * power (a ⋅ b) mod m = [(a mod m) ⋅ (b mod m)] mod m
  * Avoids: Exceeding int limit from large intermediate results.
  *
  * @param { number } base - Base number.

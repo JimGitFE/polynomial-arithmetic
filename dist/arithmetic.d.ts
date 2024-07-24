@@ -1,4 +1,4 @@
-import type { PolynomialParameters, PolynomialConstructorParameters } from './types';
+import { PolynomialFormats, PolynomialParameters } from "./glboal";
 /**
  * Polynomial class with arithmetic methods.
  * @example
@@ -10,14 +10,17 @@ import type { PolynomialParameters, PolynomialConstructorParameters } from './ty
  * @public
 */
 export declare class Polynomial {
-    polyCoefficients: polyCoefficients;
-    polyExponents: polyExponents;
-    polyString: polyString;
-    constructor(originalPolynomial: PolynomialParameters[keyof PolynomialParameters], { skipFormat, polyType }?: PolynomialConstructorParameters);
+    polyFormats: PolynomialFormats;
+    coefficients: (0 | 1 | -1)[];
+    exponents: number[];
+    polynomialString: string;
+    constructor(originalPolynomial: PolynomialParameters, { onlyExps }?: {
+        onlyExps?: boolean;
+    });
     /**
      * Polynomial division method
      *
-     * @param { PolynomialParameters[keyof PolynomialParameters] } divisorParam - Divisor polynomial
+     * @param { PolynomialParameters } divisorParam - Divisor polynomial
      * @param { number } modulo - Modulo value for division, defaults to no modulo
      * @returns {{ remainder: Polynomial, quotient: Polynomial }} - Remainder and quotient of the division
      * @example
@@ -26,25 +29,25 @@ export declare class Polynomial {
      * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
      * @public
      */
-    divide(divisorParam: PolynomialParameters[keyof PolynomialParameters], modulo?: number): {
-        quotient: Polynomial;
+    divide(divisorParam: PolynomialParameters, modulo?: number): {
         remainder: Polynomial;
+        quotient: Polynomial;
     };
     /**
      * Polynomial multiplication method
      *
-     * @param { PolynomialParameters[keyof PolynomialParameters] } factorPoly - multiplier factor
+     * @param { PolynomialParameters } b - multiplier factor
      * @returns { Polynomial } - Product of the multiplication
      * @example
      * const polynomial = new Polynomial('2x^5 + 4x^4 + 1');
      * const result = polynomial.multiply([1,1,0,0,1,1]);
      * console.log(result.polynomialString) // Output: 2x^9 + 6x^8 + 4x^7 + 2x^5 + 4x^4 + 1
      */
-    multiply(factorPoly: PolynomialParameters[keyof PolynomialParameters]): Polynomial;
+    multiply(a: number[], b: number[]): Polynomial;
     /**
      * Polynomial addition method
      *
-     * @param { PolynomialParameters[keyof PolynomialParameters] } addendPoly - addend polynomial
+     * @param { PolynomialParameters } b - addend polynomial
      * @returns { Polynomial } - Sum of the polynomials
      * @example
      * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
@@ -52,19 +55,19 @@ export declare class Polynomial {
      * console.log(result.polynomialString) // Output: x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
      * @public
     */
-    add(addendPoly: PolynomialParameters[keyof PolynomialParameters]): Polynomial;
+    add(a: number[], b: number[]): Polynomial;
     /**
      * Polynomial subtraction method
      *
-     * @param { PolynomialParameters[keyof PolynomialParameters] } subtrahendPoly - Subtrahend polynomial
-     * @returns { Polynomial } - Difference between the Polynomial instance and the Polynomial parameter: subtrahendPoly
+     * @param { PolynomialParameters } b - Subtrahend polynomial
+     * @returns { Polynomial } - Difference of the polynomials
      * @example
      * const polynomial = new Polynomial('x^4 + x^1 + 1');
      * const result = polynomial.sub([1,1]);
      * console.log(result.polynomialString) // Output: x^4
      * @public
     */
-    sub(subtrahendPoly: PolynomialParameters[keyof PolynomialParameters]): Polynomial;
+    sub(a: number[], b: number[]): Polynomial;
     /**
      * Polynomial derivative method
      * @returns { Polynomial } - Derivative of the polynomial
@@ -76,19 +79,6 @@ export declare class Polynomial {
      */
     derivative(): Polynomial;
     /**
-     * Greatest Common Divisor of two polynomials method
-     *
-     * @param { PolynomialParameters[keyof PolynomialParameters] } dividendPoly - Polynomial to compute the GCD with
-     * @param { number } modulo - Modulo value for division, defaults to no modulo
-     * @returns { Polynomial } - Greatest Common Divisor of the current Polynomial instance and the Polynomial parameter: dividendPoly
-     * @example
-     * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
-     * const result = polynomial.gcd([1,1,1,0,1,1,0,0,1,1]);
-     * console.log(result.polynomialString) // Output: x^4 + x^1 + 1
-     * @public
-    */
-    gcd(dividendPoly: PolynomialParameters[keyof PolynomialParameters], modulo?: number): Polynomial;
-    /**
      * Check if coefficients are all zero
      * Use: equivalent of null polynomial
      *
@@ -96,7 +86,6 @@ export declare class Polynomial {
      * @example
      * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
      * console.log(polynomial.isAllZero()) // Output: false
-     * @internal
      */
     isAllZero(): boolean;
 }
