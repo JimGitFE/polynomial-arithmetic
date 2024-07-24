@@ -28,7 +28,7 @@ test("Addition & Subtraction", () => {
 
 test("Primitiveness, Irreducibility & Setwise Coprime Taps", () => {
     // Prime divisors of 2^degree none and many x^5
-    const gateTapsPolys = [new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1"), new FieldPolynomial("x^16 + x^15 x^13 + x^4 + 1")];
+    const gateTapsPolys = [new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1"), new FieldPolynomial("x^16 + x^5 + x^4 + x^3 + 1")];
     
     // Properties of a Maximum Length Sequence LFSR polynomial taps feed
     const irreducible = gateTapsPolys[0].isIrreducible() && gateTapsPolys[1].isIrreducible();
