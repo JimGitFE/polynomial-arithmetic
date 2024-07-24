@@ -1,6 +1,6 @@
 {
   "name": "polynomial-arithmetic",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library for polynomial arithmetic, designed in the context of a Galois Field (GF). Test for primitive & irreducible polynomials alongside essential arithmetic operations such as polynomial multiplication, addition, subtraction and division.",
   "main": "dist/index.js",
   "scripts": {
