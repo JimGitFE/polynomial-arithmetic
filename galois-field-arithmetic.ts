@@ -1,4 +1,4 @@
-import { PolynomialParameters } from './types';
+import { FieldPolynomialParameters, PolynomialParameters } from './types';
 import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
@@ -31,8 +31,8 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
      * @public 
     */
-    divideGF (divisorPoly: FieldPolynomial, {fast}:{fast?:boolean}={fast:false}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
-        const divisor = divisorPoly.polyExponents
+    divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {fast}:{fast?:boolean}={fast:false}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
+        const divisor = new FieldPolynomial(divisorPoly, {fast}).polyExponents
         let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
         let [remainderDeg, divisorDeg] = [arrayMax(remainder), arrayMax(divisor)]
 
@@ -61,11 +61,11 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polynomialString) // Output: x^4 + x^2 + 1
      * @public 
     */
-    multiplyGF (multiplier: FieldPolynomial, {fast}:{fast?:boolean} = {}): FieldPolynomial {
+    multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {fast}:{fast?:boolean} = {}): FieldPolynomial {
         let intA, intB, intP = 0, modulo = 2;
     
         // 1.1 Convert to integers // [1,0,1] => 5
-        [intA,intB] = [parseInt(this.polyCoefficients.join(''), 2), parseInt(multiplier.polyCoefficients.join(''), 2)]
+        [intA,intB] = [parseInt(this.polyCoefficients.join(''), 2), parseInt(new FieldPolynomial(multiplier, {fast}).polyCoefficients.join(''), 2)]
         
         // 1.2 Bitwise Multiplication
         while ( intB > 0) {
@@ -92,10 +92,10 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polynomialString) // Output: x^4 + x^2 + 1
      * @public
      */
-    addGF (poly: FieldPolynomial, {fast}:{fast?:boolean} = {}): FieldPolynomial {
+    addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {fast}:{fast?:boolean} = {}): FieldPolynomial {
 
         // 1.1 Convert to integers & Bitwise Add // [1,0,1] => 5
-        const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(poly.polyCoefficients.join(''), 2)
+        const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(new FieldPolynomial(poly, {fast}).polyCoefficients.join(''), 2)
                 
         // 1.2 Reformat from Integer to coefficients array // ex. 5 => [1,0,1]
         return new FieldPolynomial(result.toString(2).split("").map(str=>Number(str)), {fast})
@@ -119,8 +119,8 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polynomialString) // Output: x^3 + x + 1 
      * @public
     */
-    polyGCD (poly: FieldPolynomial, modulo: number = 2): FieldPolynomial {
-        let p = poly
+    polyGCD (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], modulo: number = 2): FieldPolynomial {
+        let p = new FieldPolynomial(poly)
         let q = <FieldPolynomial>this
 
         // 1.1 Loop until remainder is 0, then gcd(p,q) = previous remainder
