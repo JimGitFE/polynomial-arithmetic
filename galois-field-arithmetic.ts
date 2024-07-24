@@ -1,4 +1,4 @@
-import { FieldPolynomialParameters, PolynomialParameters } from './types';
+import { FieldPolynomialParameters, PolynomialParameters, PolynomialConstructorParameters } from './types';
 import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
@@ -16,7 +16,7 @@ import { polyFormats } from './types/enums';
  */
 export class FieldPolynomial extends Polynomial {
     // Constructor // note. fast works only with exponents
-    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], {skipFormat, polyType}: {skipFormat?: boolean, polyType?: polyFormats} = {}) {
+    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], {skipFormat, polyType}: PolynomialConstructorParameters = {}) {
         super(originalPoly, {skipFormat, polyType})
     }
 
@@ -33,9 +33,9 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result2.remainder.polyString) // Output: 1
      * @public 
     */
-    divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat, paramType}:{skipFormat?:boolean, paramType?: polyFormats} = {}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
-        const polyType = (skipFormat || paramType) ? (paramType || polyFormats.polyExponents) : undefined // when parameter not of type FieldPolynomial
-        const divisor = new FieldPolynomial(divisorPoly, {skipFormat, polyType}).polyExponents
+    divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat, polyType}: PolynomialConstructorParameters = {}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
+        const paramType = (skipFormat || polyType) ? (polyType || polyFormats.polyExponents) : undefined // when parameter not of type FieldPolynomial
+        const divisor = new FieldPolynomial(divisorPoly, {skipFormat, polyType: paramType}).polyExponents
         let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
         let [remainderDeg, divisorDeg] = [arrayMax(remainder), arrayMax(divisor)]
 
@@ -67,7 +67,7 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polyString) // Output: x^7 + x^6 + x^4 + x^3 + 1
      * @public 
     */
-    multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:{skipFormat?:boolean} = {}): FieldPolynomial {
+    multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:Pick<PolynomialConstructorParameters, "skipFormat"> = {}): FieldPolynomial {
         let intA, intB, intP = 0, modulo = 2;
     
         // 1.1 Convert to integers // [1,0,1] => 5
@@ -98,7 +98,7 @@ export class FieldPolynomial extends Polynomial {
      * console.log(result.polyString) // Output: x^4 + x^2 + 1
      * @public
      */
-    addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:{skipFormat?:boolean} = {}): FieldPolynomial {
+    addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:Pick<PolynomialConstructorParameters, "skipFormat"> = {}): FieldPolynomial {
 
         // 1.1 Convert to integers & Bitwise Add // [1,0,1] => 5
         const result = parseInt(this.polyCoefficients.join(''), 2) ^ parseInt(new FieldPolynomial(poly, {skipFormat}).polyCoefficients.join(''), 2)

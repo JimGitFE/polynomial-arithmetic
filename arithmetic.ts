@@ -1,7 +1,6 @@
 import { mod } from "./utils/math";
 import { removeLZero, polyReformat } from "./utils/formatter";
-import { PolynomialParameters } from './types';
-import { polyFormats } from "./types/enums";
+import { PolynomialParameters, PolynomialConstructorParameters } from './types';
 
 /** 
  * Polynomial class with arithmetic methods.
@@ -20,7 +19,7 @@ export class Polynomial {
     
     constructor(
             originalPolynomial: PolynomialParameters[keyof PolynomialParameters], 
-            { skipFormat = false, polyType }: { skipFormat?: boolean, polyType?: polyFormats } = {}
+            { skipFormat = false, polyType }: PolynomialConstructorParameters = {}
         ) {
         if (skipFormat) {
             // this.polyFormats = {coefficients: [], exponents: <number[]>originalPolynomial, polynomialString: ""}

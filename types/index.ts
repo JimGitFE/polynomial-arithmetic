@@ -1,5 +1,6 @@
 import { Polynomial } from "../arithmetic"
 import { FieldPolynomial } from "../galois-field-arithmetic";
+import { polyFormats } from "./enums";
 
 /**
  * Accepted parameter polynomial types in arithmetic methods.
@@ -21,4 +22,14 @@ interface FieldPolynomialParameters {
     FieldPolynomial: FieldPolynomial;
 }
 
-export { PolynomialParameters, FieldPolynomialParameters }
+/**
+ * Optional setting constructor parameters for Polynomial class.
+ * @example
+ * 
+ */
+interface PolynomialConstructorParameters {
+    skipFormat?: boolean, 
+    polyType?: polyFormats
+}
+
+export { PolynomialParameters, FieldPolynomialParameters, PolynomialConstructorParameters }
