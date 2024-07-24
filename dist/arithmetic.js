@@ -14,15 +14,16 @@ const formatter_1 = require("./utils/formatter");
  * @public
 */
 class Polynomial {
-    constructor(originalPolynomial, { onlyExps } = { onlyExps: false }) {
-        if (onlyExps) {
-            this.polyFormats = { coefficients: [], exponents: originalPolynomial, polynomialString: "" };
+    constructor(originalPolynomial, { skipFormat = false, polyType } = {}) {
+        if (skipFormat) {
+            const exps = (0, formatter_1.isFieldPolynomial)(originalPolynomial) ? originalPolynomial.polyExponents : originalPolynomial;
+            this.polyString = "";
+            this.polyCoefficients = [];
+            this.polyExponents = exps;
         }
         else {
-            this.polyFormats = (0, formatter_1.polyReformat)(originalPolynomial);
+            [this.polyString, this.polyCoefficients, this.polyExponents] = (0, formatter_1.polyReformat)(originalPolynomial, polyType);
         }
-        // Assign formats to class properties directly from nested object property
-        [this.coefficients, this.exponents, this.polynomialString] = [this.polyFormats.coefficients, this.polyFormats.exponents, this.polyFormats.polynomialString];
     }
     /*
 
@@ -39,7 +40,7 @@ class Polynomial {
     /**
      * Polynomial division method
      *
-     * @param { PolynomialParameters } divisorParam - Divisor polynomial
+     * @param { PolynomialParameters[keyof PolynomialParameters] } divisorParam - Divisor polynomial
      * @param { number } modulo - Modulo value for division, defaults to no modulo
      * @returns {{ remainder: Polynomial, quotient: Polynomial }} - Remainder and quotient of the division
      * @example
@@ -48,8 +49,8 @@ class Polynomial {
      * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
      * @public
      */
-    divide(divisorParam, modulo = 2) {
-        const [dividend, divisor] = [this.coefficients, (0, formatter_1.polyReformat)(divisorParam).coefficients];
+    divide(divisorParam, modulo = 0) {
+        const [dividend, divisor] = [this.polyCoefficients, new Polynomial(divisorParam).polyCoefficients];
         let output = [...dividend];
         let normalizer = divisor[0];
         // 1.1 Compute outputs for the difference of exponents
@@ -73,14 +74,15 @@ class Polynomial {
     /**
      * Polynomial multiplication method
      *
-     * @param { PolynomialParameters } b - multiplier factor
+     * @param { PolynomialParameters[keyof PolynomialParameters] } factorPoly - multiplier factor
      * @returns { Polynomial } - Product of the multiplication
      * @example
      * const polynomial = new Polynomial('2x^5 + 4x^4 + 1');
      * const result = polynomial.multiply([1,1,0,0,1,1]);
      * console.log(result.polynomialString) // Output: 2x^9 + 6x^8 + 4x^7 + 2x^5 + 4x^4 + 1
      */
-    multiply(a, b) {
+    multiply(factorPoly) {
+        let [a, b] = [this.polyCoefficients, new Polynomial(factorPoly).polyCoefficients];
         let output = new Array(a.length + b.length - 1).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < a.length; i++) {
@@ -93,7 +95,7 @@ class Polynomial {
     /**
      * Polynomial addition method
      *
-     * @param { PolynomialParameters } b - addend polynomial
+     * @param { PolynomialParameters[keyof PolynomialParameters] } addendPoly - addend polynomial
      * @returns { Polynomial } - Sum of the polynomials
      * @example
      * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
@@ -101,30 +103,34 @@ class Polynomial {
      * console.log(result.polynomialString) // Output: x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
      * @public
     */
-    add(a, b) {
+    add(addendPoly) {
+        let [a, b] = [this.polyCoefficients, new Polynomial(addendPoly).polyCoefficients];
         let output = new Array(Math.max(a.length, b.length)).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = a[i] || 0 + b[i] || 0;
+            let [ai, bi] = [a[a.length - i - 1], b[b.length - i - 1]];
+            output[output.length - i - 1] = (ai || 0) + (bi || 0);
         }
         return new Polynomial((0, formatter_1.removeLZero)(output));
     }
     /**
      * Polynomial subtraction method
      *
-     * @param { PolynomialParameters } b - Subtrahend polynomial
-     * @returns { Polynomial } - Difference of the polynomials
+     * @param { PolynomialParameters[keyof PolynomialParameters] } subtrahendPoly - Subtrahend polynomial
+     * @returns { Polynomial } - Difference between the Polynomial instance and the Polynomial parameter: subtrahendPoly
      * @example
      * const polynomial = new Polynomial('x^4 + x^1 + 1');
      * const result = polynomial.sub([1,1]);
      * console.log(result.polynomialString) // Output: x^4
      * @public
     */
-    sub(a, b) {
+    sub(subtrahendPoly) {
+        let [a, b] = [this.polyCoefficients, new Polynomial(subtrahendPoly).polyCoefficients];
         let output = new Array(Math.max(a.length, b.length)).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = a[i] || 0 - b[i] || 0;
+            let [ai, bi] = [a[a.length - i - 1], b[b.length - i - 1]];
+            output[output.length - i - 1] = (ai || 0) - (bi || 0);
         }
         return new Polynomial((0, formatter_1.removeLZero)(output));
     }
@@ -138,12 +144,36 @@ class Polynomial {
      * @public
      */
     derivative() {
-        let output = new Array(this.coefficients.length - 1).fill(0);
+        let output = new Array(this.polyCoefficients.length - 1).fill(0);
         // 1.1 Compute coefficient for each possible term
         for (let i = 0; i < output.length; i++) {
-            output[i] = this.coefficients[i + 1] * (i + 1);
+            output[i] = this.polyCoefficients[i] * (this.polyCoefficients.length - 1 - i);
         }
         return new Polynomial((0, formatter_1.removeLZero)(output));
+    }
+    /**
+     * Greatest Common Divisor of two polynomials method
+     *
+     * @param { PolynomialParameters[keyof PolynomialParameters] } dividendPoly - Polynomial to compute the GCD with
+     * @param { number } modulo - Modulo value for division, defaults to no modulo
+     * @returns { Polynomial } - Greatest Common Divisor of the current Polynomial instance and the Polynomial parameter: dividendPoly
+     * @example
+     * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
+     * const result = polynomial.gcd([1,1,1,0,1,1,0,0,1,1]);
+     * console.log(result.polynomialString) // Output: x^4 + x^1 + 1
+     * @public
+    */
+    gcd(dividendPoly, modulo = 0) {
+        let [p, q] = [new Polynomial(dividendPoly), this];
+        // 1.1 Loop until remainder is 0, then gcd(p,q) = previous remainder
+        while (!q.isAllZero()) {
+            let remainder;
+            // 1.2 Compute Remainder
+            remainder = p.divide(q, modulo).remainder;
+            p = q;
+            q = remainder; // remainder can contain left zero
+        }
+        return p; // p is d / d divides p & q 
     }
     /**
      * Check if coefficients are all zero
@@ -153,9 +183,10 @@ class Polynomial {
      * @example
      * const polynomial = new Polynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
      * console.log(polynomial.isAllZero()) // Output: false
+     * @internal
      */
     isAllZero() {
-        return this.polyFormats.coefficients.every(val => val === 0);
+        return this.polyCoefficients.every(val => val === 0);
     }
 }
 exports.Polynomial = Polynomial;
@@ -167,5 +198,5 @@ exports.Polynomial = Polynomial;
 10100
  101
 10001
-*/
+*/ 
 //# sourceMappingURL=arithmetic.js.map

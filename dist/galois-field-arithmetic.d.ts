@@ -1,34 +1,30 @@
-import { PolynomialParameters } from "./glboal";
+import type { FieldPolynomialParameters, PolynomialParameters, PolynomialConstructorParameters } from './types';
 import { Polynomial } from "./arithmetic";
 /**
  * FieldPolynomial class with arithmetic methods for polynomials in GF(2).
- * @class
  * @extends Polynomial
  * @example
  * const polynomial = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
  * const result = polynomial.divideGF(new FieldPolynomial('x^4 + x^1 + 1'));
- * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
+ * console.log(result.remainder.polyString) // Output: x^4 + x^1 + 1
  * @public
  */
 export declare class FieldPolynomial extends Polynomial {
-    constructor(originalPoly: PolynomialParameters, { fast }?: {
-        fast?: boolean;
-    });
+    constructor(originalPoly: PolynomialParameters[keyof PolynomialParameters], { skipFormat, polyType }?: PolynomialConstructorParameters);
     /**
      * Compute the division of two polynomials in GF(2).
      * Method: Optimized polynomial long division
      *
-     * @param { FieldPolynomial } divisorPoly - Divisor polynomial
+     * @param { FieldPolynomialParameters } divisorPoly - Divisor polynomial
      * @returns {{ remainder: FieldPolynomial, quotient: FieldPolynomial }} - Remainder and quotient of the division
      * @example
-     * const polynomial = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
-     * const result = polynomial.divideGF(new FieldPolynomial('x^4 + x^1 + 1'));
-     * console.log(result.remainder.polynomialString) // Output: x^4 + x^1 + 1
+     * const dividend = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
+     * const {quotient, remainder} = dividend.divideGF('x^4 + x^1 + 1');
+     * console.log(quotient.polyString) // Output: 5x^5 + 4x^4 + 3x^3 + 2x^2 + x
+     * console.log(remainder.polyString) // Output: 1
      * @public
     */
-    divideGF(divisorPoly: FieldPolynomial, { fast }?: {
-        fast?: boolean;
-    }): {
+    divideGF(divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], { skipFormat, polyType }?: PolynomialConstructorParameters): {
         remainder: FieldPolynomial;
         quotient: FieldPolynomial;
     };
@@ -36,56 +32,50 @@ export declare class FieldPolynomial extends Polynomial {
      * Compute the multiplication of two polynomials in GF(2).
      * Method: Bitwise Multiplication
      *
-     * @param { FieldPolynomial } multiplier - Multiplier polynomial
+     * @param { FieldPolynomialParameters } multiplier - Multiplier polynomial
      * @returns { FieldPolynomial } - Product of two polynomials
      * @example
-     * const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
-     * const result = polynomial.multiplyGF(new FieldPolynomial('x^3 + x + 1'));
-     * console.log(result.polynomialString) // Output: x^4 + x^2 + 1
+     * const term = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+     * const product = polynomial.multiplyGF('x^3 + x + 1');
+     * console.log(product.polyString) // Output: x^7 + x^6 + x^4 + x^3 + 1
      * @public
     */
-    multiplyGF(multiplier: FieldPolynomial, { fast }?: {
-        fast?: boolean;
-    }): FieldPolynomial;
+    multiplyGF(multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], { skipFormat }?: Pick<PolynomialConstructorParameters, "skipFormat">): FieldPolynomial;
     /**
      * Compute the addition of two polynomials in GF(2).
      * Method: Bitwise XOR of two polynomials
      *
-     * @param { FieldPolynomial } poly - Addend polynomial
+     * @param { FieldPolynomialParameters } poly - Addend polynomial
      * @returns { FieldPolynomial } - Sum of two polynomials
      * @example
-     * const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
-     * const result = polynomial.addGF(new FieldPolynomial('x^3 + x + 1'));
-     * console.log(result.polynomialString) // Output: x^4 + x^2 + 1
+     * const addend = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+     * const sum = addend.addGF(new FieldPolynomial('x^3 + x + 1'));
+     * console.log(sum.polyString) // Output: x^4 + x^2 + 1
      * @public
      */
-    addGF(poly: FieldPolynomial, { fast }?: {
-        fast?: boolean;
-    }): FieldPolynomial;
+    addGF(poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], { skipFormat }?: Pick<PolynomialConstructorParameters, "skipFormat">): FieldPolynomial;
     /**
      * Compute the subtraction of two polynomials.
      * Method: Bitwise XOR of two polynomials
      * @public
     */
-    subGF: (poly: FieldPolynomial, { fast }?: {
-        fast?: boolean;
-    }) => FieldPolynomial;
+    subGF: (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], { skipFormat }?: Pick<PolynomialConstructorParameters, "skipFormat">) => FieldPolynomial;
     /**
      * Compute the greatest common divisor of two polynomials in GF(2).
      *
-     * @param { FieldPolynomial } poly - Polynomial to compute GCD with
+     * @param { FieldPolynomialParameters } poly - Polynomial to compute GCD with
      * @param { number } modulo - Optimized for GF(2), defaults to 2
      * @returns { FieldPolynomial } - GCD of two polynomials
      * @example
      * const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
      * const result = polynomial.polyGCD(new FieldPolynomial('x^3 + x + 1'));
-     * console.log(result.polynomialString) // Output: x^3 + x + 1
+     * console.log(result.polyString) // Output: x^3 + x + 1
      * @public
     */
-    polyGCD(poly: FieldPolynomial, modulo?: number): FieldPolynomial;
+    polyGCD(poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], modulo?: number): FieldPolynomial;
     /**
      * Check if polynomial is irreducible.
-     * Method: Rabin's test of irreducibility, x^(n/i) mod f(x) = 1, every i prime divisors of n
+     * Method: Rabin's test of irreducibility, x^(n/i) = x mod f(x), every i prime divisors of n
      *
      * @returns {boolean} - True if polynomial is irreducible
      * @example

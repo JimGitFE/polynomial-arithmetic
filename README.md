@@ -119,7 +119,7 @@ const irreducible = gateTapsPoly.isIrreducible(); // true
 const primitive = gateTapsPoly.isPrimitive(); // true
 const setwise = gateTapsPoly.isSetwisePrime(); // true
 
-console.log(`Maximum sequence LFSR Feedback polynomial: ${gateTapsPoly}`)
+console.log(`Maximum sequence LFSR Feedback polynomial: ${gateTapsPoly}`) // x^13 + x^12 + x^11 + x^8 + 1
 ```
 Array of maximum sequence Linear Feedback Shift Registers (LFSRs) irreducible & primitive polynomials with setwise coprime taps. Following property names and their meaning:
 
