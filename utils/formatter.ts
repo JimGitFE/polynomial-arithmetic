@@ -10,6 +10,7 @@ note: polynomials in GF(2), have coefficients 0 or 1
 import { PolynomialParameters } from '../types';
 import { Polynomial } from '../arithmetic';
 import { polyFormats } from '../types/enums';
+import type { FieldPolynomial } from '../galois-field-arithmetic';
 
 /** 
  * Formats from array of coefficients to polynomial String.
@@ -150,7 +151,7 @@ const removeLZero = (poly0: number[]): number[] | (0|1|-1)[] => {
 const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], formatType?: polyFormats ): [polyString, polyCoefficients, polyExponents] => {
 
     // Polynomial Class // [1,0] => [1,0] 
-    if (poly instanceof Polynomial) {
+    if (poly instanceof Polynomial || isFieldPolynomial(poly)) {
         return [poly.polyString, poly.polyCoefficients, poly.polyExponents]
 
         // String Representation // x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
@@ -173,4 +174,12 @@ const polyReformat = (poly: PolynomialParameters[keyof PolynomialParameters], fo
 
 }
 
-export { coefToString, stringToCoef, expToCoef, coefToExp, removeLZero, polyReformat }
+/**
+ * Checks instance of FieldPolynomial. Without causing circular dependency. 
+ * @internal 
+ */
+function isFieldPolynomial(obj: any): obj is FieldPolynomial {
+    return obj && obj.hasOwnProperty('polyExponents') && Array.isArray(obj.polyExponents);
+}
+
+export { coefToString, stringToCoef, expToCoef, coefToExp, removeLZero, polyReformat, isFieldPolynomial }

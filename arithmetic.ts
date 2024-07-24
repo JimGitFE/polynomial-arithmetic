@@ -1,6 +1,6 @@
+import type { PolynomialParameters, PolynomialConstructorParameters } from './types';
 import { mod } from "./utils/math";
-import { removeLZero, polyReformat } from "./utils/formatter";
-import { PolynomialParameters, PolynomialConstructorParameters } from './types';
+import { removeLZero, polyReformat, isFieldPolynomial } from "./utils/formatter";
 
 /** 
  * Polynomial class with arithmetic methods.
@@ -22,14 +22,13 @@ export class Polynomial {
             { skipFormat = false, polyType }: PolynomialConstructorParameters = {}
         ) {
         if (skipFormat) {
-            // this.polyFormats = {coefficients: [], exponents: <number[]>originalPolynomial, polynomialString: ""}
-            [this.polyString, this.polyCoefficients, this.polyExponents] = ["",[],<polyExponents>originalPolynomial]
+            const exps = isFieldPolynomial(originalPolynomial) ? originalPolynomial.polyExponents : <polyExponents>originalPolynomial
+            this.polyString = "";
+            this.polyCoefficients = [];
+            this.polyExponents = exps;
         } else {
-            // this.polyFormats = polyReformat(originalPolynomial)
             [this.polyString, this.polyCoefficients, this.polyExponents] = polyReformat(originalPolynomial, polyType)
         }
-        // Assign formats to class properties directly from nested object property
-        // [this.coefficients, this.exponents, this.polynomialString] = [this.polyFormats.coefficients, this.polyFormats.exponents, this.polyFormats.polynomialString]
     }
     /*
 

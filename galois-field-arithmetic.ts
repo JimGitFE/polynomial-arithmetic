@@ -1,4 +1,4 @@
-import { FieldPolynomialParameters, PolynomialParameters, PolynomialConstructorParameters } from './types';
+import type { FieldPolynomialParameters, PolynomialParameters, PolynomialConstructorParameters } from './types';
 import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
@@ -27,15 +27,16 @@ export class FieldPolynomial extends Polynomial {
      * @param { FieldPolynomialParameters } divisorPoly - Divisor polynomial
      * @returns {{ remainder: FieldPolynomial, quotient: FieldPolynomial }} - Remainder and quotient of the division
      * @example
-     * const polynomial = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
-     * const result = polynomial.divideGF('x^4 + x^1 + 1');
-     * console.log(result2.quotient.polyString) // Output: 5x^5 + 4x^4 + 3x^3 + 2x^2 + x
-     * console.log(result2.remainder.polyString) // Output: 1
+     * const dividend = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
+     * const {quotient, remainder} = dividend.divideGF('x^4 + x^1 + 1');
+     * console.log(quotient.polyString) // Output: 5x^5 + 4x^4 + 3x^3 + 2x^2 + x
+     * console.log(remainder.polyString) // Output: 1
      * @public 
     */
     divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat, polyType}: PolynomialConstructorParameters = {}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
         const paramType = (skipFormat || polyType) ? (polyType || polyFormats.polyExponents) : undefined // when parameter not of type FieldPolynomial
         const divisor = new FieldPolynomial(divisorPoly, {skipFormat, polyType: paramType}).polyExponents
+        
         let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
         let [remainderDeg, divisorDeg] = [arrayMax(remainder), arrayMax(divisor)]
 
@@ -45,7 +46,6 @@ export class FieldPolynomial extends Polynomial {
             quotient.push(remainderDeg - divisorDeg) // [1]
 
             // 1.2 Compute Remainder, if duplicate => remove since working modulo 2
-            console.log(divisor)
             remainder = filterDuplicates(divisor.map((exp)=>exp+quotient[i]),remainder) // [3,4,1] unsorted!
 
             // 1.3 Update dividend => divide again
@@ -62,9 +62,9 @@ export class FieldPolynomial extends Polynomial {
      * @param { FieldPolynomialParameters } multiplier - Multiplier polynomial
      * @returns { FieldPolynomial } - Product of two polynomials
      * @example
-     * const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
-     * const result = polynomial.multiplyGF('x^3 + x + 1');
-     * console.log(result.polyString) // Output: x^7 + x^6 + x^4 + x^3 + 1
+     * const term = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+     * const product = polynomial.multiplyGF('x^3 + x + 1');
+     * console.log(product.polyString) // Output: x^7 + x^6 + x^4 + x^3 + 1
      * @public 
     */
     multiplyGF (multiplier: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:Pick<PolynomialConstructorParameters, "skipFormat"> = {}): FieldPolynomial {
@@ -93,9 +93,9 @@ export class FieldPolynomial extends Polynomial {
      * @param { FieldPolynomialParameters } poly - Addend polynomial
      * @returns { FieldPolynomial } - Sum of two polynomials
      * @example
-     * const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
-     * const result = polynomial.addGF(new FieldPolynomial('x^3 + x + 1'));
-     * console.log(result.polyString) // Output: x^4 + x^2 + 1
+     * const addend = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+     * const sum = addend.addGF(new FieldPolynomial('x^3 + x + 1'));
+     * console.log(sum.polyString) // Output: x^4 + x^2 + 1
      * @public
      */
     addGF (poly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat}:Pick<PolynomialConstructorParameters, "skipFormat"> = {}): FieldPolynomial {
@@ -142,7 +142,7 @@ export class FieldPolynomial extends Polynomial {
 
     /**
      * Check if polynomial is irreducible.
-     * Method: Rabin's test of irreducibility, x^(n/i) mod f(x) = 1, every i prime divisors of n
+     * Method: Rabin's test of irreducibility, x^(n/i) = x mod f(x), every i prime divisors of n
      * 
      * @returns {boolean} - True if polynomial is irreducible
      * @example
@@ -173,7 +173,7 @@ export class FieldPolynomial extends Polynomial {
 
                 // 2.4 Divides x^2^n ≡ x mod f // remainder = 0
                 let { remainder } = new FieldPolynomial([exp,1], {skipFormat: true}).divideGF(this, {skipFormat: true})
-                if ( remainder.polyExponents.length !== 0 ) return false // [] !== []
+                if ( remainder.polyExponents.length !== 0 ) return false // remainder has to be []
             }
         }
 
@@ -225,6 +225,7 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isSetwiseCoprime (): boolean {
+        console.log(this)
         return arrayGcd(this.polyExponents) == 1
     }
     
