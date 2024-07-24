@@ -20,15 +20,14 @@ export class Polynomial {
     
     constructor(
             originalPolynomial: PolynomialParameters[keyof PolynomialParameters], 
-            {skipFormat = false, polyType, onlyExps = false, formatType}: {skipFormat?: boolean, polyType?: polyFormats, onlyExps?: boolean, formatType?: string} = {}
+            { skipFormat = false, polyType }: { skipFormat?: boolean, polyType?: polyFormats } = {}
         ) {
-        if (onlyExps || skipFormat) {
+        if (skipFormat) {
             // this.polyFormats = {coefficients: [], exponents: <number[]>originalPolynomial, polynomialString: ""}
             [this.polyString, this.polyCoefficients, this.polyExponents] = ["",<polyExponents>originalPolynomial,[]]
         } else {
             // this.polyFormats = polyReformat(originalPolynomial)
             [this.polyString, this.polyCoefficients, this.polyExponents] = polyReformat(originalPolynomial, polyType)
-            console.log("receiveddd stuff:   asddsa",skipFormat, onlyExps) // is skipFormat defaulting to false or is the whole object {}
         }
         // Assign formats to class properties directly from nested object property
         // [this.coefficients, this.exponents, this.polynomialString] = [this.polyFormats.coefficients, this.polyFormats.exponents, this.polyFormats.polynomialString]
