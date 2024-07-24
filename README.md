@@ -48,25 +48,27 @@ This long division method is optimized by computing the modulus (number) of inte
 
 ## Finite Fields - Galois Field (GF) Methods
 ```typescript
-let result;
-const polynomial = new FieldPolynomial('x^4 - x^2 + 1')
-
 // Division
-result = polynomial.divideGF("x^2 + 1")
-console.log(result.quotient.polyString) // x^2
-console.log(result.remainder.polyString) // 1
+const dividend = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
+const {quotient, remainder} = dividend.divide('x^4 + x^1 + 1');
+console.log("div: ",quotient.polyString) // x^5 + x^4 + x^3 + x^2 + x
+console.log("div: ",remainder.polyString) // 1
 
 // XOR Addition
-result = result.quotient.addGF("x^3 + x^2 + 1")
-console.log(result.polyString) // x^3 + 1
+const addend = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+const sum = addend.addGF(new FieldPolynomial('x^3 + x + 1'));
+console.log(sum.polyString) // x^4 + x^2
 
 // AND Multiplication
-result = result.multiplyGF("x^2 + 1")
-console.log(result.polyString) // x^5 + x^3 + x^2 + 1
+const term = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1');
+const product = term.multiplyGF('x^3 + x + 1');
+console.log(product.polyString) // x^7 + x^6 + x^4 + x^3 + 1
+
 
 // XOR Subtraction
-result = result.subGF("x^2 + 1")
-console.log(result.polyString) // x^5 + x^3
+const minuend = new FieldPolynomial("x^5 + x^3 + x^2 + 1");
+const difference = minuend.subGF("x^2 + 1");
+console.log(difference.polyString) // x^5 + x^3
 ```
 
 Bitwise optimized methods for polynomial arithmetic in GF(2) where coefficients are either 0 or 1, example: x^10 + x.Enabling efficient computation. Multiplication, bitwise AND, bit [Carry-Less Product](https://en.wikipedia.org/wiki/Carry-less_product) method. Subtraction & Addition both share the same method & result. XOR (bit exclusive OR) operation.
@@ -108,6 +110,17 @@ For a polynomial f(x) of degree m over GF(p) (where p is prime) to be primtive, 
 
 ## Feedback Polynomials [![JSON](https://img.shields.io/badge/Feedback_Polynomials-JSON-blue)](https://gist.github.com/JimGitFE/6fa73d23cdbbd8d41c45d55f9f1527ac)
 
+```typescript
+// Generate High Degree LFSR Feddback shift register Polynomial
+const gateTapsPoly = new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1");
+
+// Properties of a Maximum Length Sequence LFSR polynomial taps feed
+const irreducible = gateTapsPoly.isIrreducible(); // true
+const primitive = gateTapsPoly.isPrimitive(); // true
+const setwise = gateTapsPoly.isSetwisePrime(); // true
+
+console.log(`Maximum sequence LFSR Feedback polynomial: ${gateTapsPoly}`)
+```
 Array of maximum sequence Linear Feedback Shift Registers (LFSRs) irreducible & primitive polynomials with setwise coprime taps. Following property names and their meaning:
 
 - Degree: highest power of the variable 𝑥 with a non-zero coefficient in the array of polynomials
