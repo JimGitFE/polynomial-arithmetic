@@ -23,7 +23,7 @@ export class Polynomial {
         ) {
         if (skipFormat) {
             // this.polyFormats = {coefficients: [], exponents: <number[]>originalPolynomial, polynomialString: ""}
-            [this.polyString, this.polyCoefficients, this.polyExponents] = ["",<polyExponents>originalPolynomial,[]]
+            [this.polyString, this.polyCoefficients, this.polyExponents] = ["",[],<polyExponents>originalPolynomial]
         } else {
             // this.polyFormats = polyReformat(originalPolynomial)
             [this.polyString, this.polyCoefficients, this.polyExponents] = polyReformat(originalPolynomial, polyType)
