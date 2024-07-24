@@ -1,13 +1,4 @@
 /**
- * Naming of each polynomial representation.
-*/
-enum Namings {
-    polyString = "string",
-    polyCoefficients = "coefficients",
-    polyExponents = "exponents"
-}
-
-/**
  * String representation of a polynomial.
  * @example 'x^2 + x + 1'
 */
