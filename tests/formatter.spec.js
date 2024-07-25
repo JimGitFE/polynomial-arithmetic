@@ -1,4 +1,6 @@
-const { coefToString, stringToCoef, expToCoef, coefToExp, removeLZero, polyReformat } = require('../dist/utils/formatter.js');
+const Polynomial = require('../dist/arithmetic.js').Polynomial;
+const exp = require('constants');
+const { coefToString, stringToCoef, expToCoef, coefToExp } = require('../dist/utils/formatter.js');
 const { test } = require('@jest/globals'); // types
 
 test('Coefficient to String', () => {
@@ -51,4 +53,13 @@ test('Coefficients to Exponents', () => {
     expect(coefs[4]).toEqual([5, -1, -1])
     expect(coefs[5]).toEqual([0])
     expect(coefs[6]).toEqual([0,0])
+})
+
+test("Polynomial constructor with exponents representation" , () => {
+    const exponents = [8,4,0,0] // x^8 + x^4 + 2
+    const polynomial = new Polynomial(exponents, {polyType: "exponents"})
+
+    expect(polynomial.polyString).toEqual("x^8 + x^4 + 2")
+    expect(polynomial.polyCoefficients).toEqual([1,0,0,0,1,0,0,0,2])
+    expect(polynomial.polyExponents).toEqual([8,4,0,0])
 })

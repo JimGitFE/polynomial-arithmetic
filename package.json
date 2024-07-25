@@ -31,7 +31,8 @@
     "@types/node": "^20.12.7",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "jest": "^29.7.0"
   },
   "bugs": {
     "url": "https://github.com/JimGitFE/polynomial-arithmetic/issues"
