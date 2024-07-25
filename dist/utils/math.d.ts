@@ -36,6 +36,7 @@ export declare const mod: (num: number, modulo: number) => number;
 /**
  * Compute the power of a number modulo another number.
  * Method: Binary bitwise exponentiation, enables high exponent calculation.
+ * power (a ⋅ b) mod m = [(a mod m) ⋅ (b mod m)] mod m
  * Avoids: Exceeding int limit from large intermediate results.
  *
  * @param { number } base - Base number.
