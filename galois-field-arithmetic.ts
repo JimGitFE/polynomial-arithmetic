@@ -3,7 +3,6 @@ import { Polynomial } from "./arithmetic";
 import { filterDuplicates, arrayMax } from './utils/polynomial';
 import { arrayGcd } from "./utils/gcd";
 import { isPrime } from "./utils/math";
-import { polyFormats } from './types/enums';
 
 /**
  * FieldPolynomial class with arithmetic methods for polynomials in GF(2).
@@ -34,7 +33,7 @@ export class FieldPolynomial extends Polynomial {
      * @public 
     */
     divideGF (divisorPoly: FieldPolynomialParameters[keyof FieldPolynomialParameters], {skipFormat, polyType}: PolynomialConstructorParameters = {}): {remainder: FieldPolynomial, quotient: FieldPolynomial} {
-        const paramType = (skipFormat || polyType) ? (polyType || polyFormats.polyExponents) : undefined // when parameter not of type FieldPolynomial
+        const paramType = (skipFormat || polyType) ? (polyType || "exponents") : undefined // when parameter not of type FieldPolynomial
         const divisor = new FieldPolynomial(divisorPoly, {skipFormat, polyType: paramType}).polyExponents
         
         let [quotient, remainder, i]:[number[], number[], number] = [[], [...this.polyExponents], 0] // remainder = dividend
@@ -52,7 +51,7 @@ export class FieldPolynomial extends Polynomial {
             i++, remainderDeg = arrayMax(remainder)
         }
         
-        return {quotient: new FieldPolynomial(quotient, {skipFormat, polyType: polyFormats.polyExponents}), remainder: new FieldPolynomial(remainder, {skipFormat, polyType: polyFormats.polyExponents})}
+        return {quotient: new FieldPolynomial(quotient, {skipFormat, polyType: "exponents"}), remainder: new FieldPolynomial(remainder, {skipFormat, polyType: "exponents"})}
     }
 
     /**
@@ -225,72 +224,6 @@ export class FieldPolynomial extends Polynomial {
      * @public
     */
     isSetwiseCoprime (): boolean {
-        console.log(this)
         return arrayGcd(this.polyExponents) == 1
     }
-    
 }
-
-/*
-
-Not Primitive
-
- x^2 + 1 // wikipedia, primitive examples
- x^4 + x^2 + x + 1 // math.stack
-
-Primitive over GF(2^n)
-
- x^7 + x^6 + 1
- x^3 + x + 1
- x^3 + x^2 + 1
-
- x^4 + x + 1
- x^4 + x^3 + 1
- x^10 + x^3 + 1
-
-Irreducible only polynomials
-
- x^4 + x^3 + x^2 + x + 1
- x^10 + x^3 + 1
- x^10 + x^8 + x^7 + x^6 + x^4 + x^3 + x^2 + x^1 + 1
- 
-Reducible polynomials
- 
- x^4 + x^2 + 1
- x^4 + x^3 + x + 1
- x^8 + x^5 + x^4 + x^2 + 1
-
- x^5 + x^3 + x + 1 // ?
- x^5 + x^4 + x^3 + x^2 + x-1 // ?
-
- ...
- x^8 + x^5 + x^4 + x^2 + 1
- x^8 + x^6 + x^5 + x^4 + x^3 + x^2 + 1
- x^8 + x^1 + 1
- x^8 + x^6 + x^3 + x^1 + 1
- x^8 + x^7 + x^5 + x^4 + x^3 + x^1 + 1
- x^8 + x^5 + x^2 + x^1 + 1
- x^8 + x^4 + x^2 + x^1 + 1
- x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
- 
- ...
- x^9 + x^7 + x^4 + x^1 + 1
- x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1
- x^9 + x^8 + x^7 + x^5 + x^3 + x^1 + 1
- x^9 + x^5 + x^2 + x^1 + 1
- x^9 + x^8 + x^6 + x^4 + x^2 + x^1 + 1
- x^9 + x^8 + x^5 + x^4 + x^2 + x^1 + 1
- x^9 + x^8 + x^7 + x^6 + x^5 + x^3 + x^2 + x^1 + 1
- x^9 + x^8 + x^7 + x^6 + x^4 + x^3 + x^2 + x^1 + 1
- ...
- x^10 + x^7 + x^5 + x^4 + x^2 + x^1 + 1
- x^10 + x^9 + x^8 + x^7 + x^5 + x^4 + x^2 + x^1 + 1
- x^10 + x^9 + x^8 + x^7 + x^5 + x^3 + x^2 + x^1 + 1
- x^10 + x^9 + x^8 + x^6 + x^5 + x^3 + x^2 + x^1 + 1
- x^10 + x^8 + x^7 + x^6 + x^5 + x^3 + x^2 + x^1 + 1
- x^10 + x^9 + x^4 + x^3 + x^2 + x^1 + 1
- x^10 + x^6 + x^4 + x^3 + x^2 + x^1 + 1
-
- x^169 + x^2 + 1
-
-*/

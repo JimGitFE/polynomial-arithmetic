@@ -13,16 +13,16 @@ import { removeLZero, polyReformat, isFieldPolynomial } from "./utils/formatter"
  * @public
 */
 export class Polynomial {
-    polyCoefficients: polyCoefficients;
-    polyExponents: polyExponents;
-    polyString: polyString;
+    polyCoefficients: polyFormats["coefficients"];
+    polyExponents: polyFormats["exponents"];
+    polyString: polyFormats['string'];
     
     constructor(
             originalPolynomial: PolynomialParameters[keyof PolynomialParameters], 
             { skipFormat = false, polyType }: PolynomialConstructorParameters = {}
         ) {
         if (skipFormat) {
-            const exps = isFieldPolynomial(originalPolynomial) ? originalPolynomial.polyExponents : <polyExponents>originalPolynomial
+            const exps = isFieldPolynomial(originalPolynomial) ? originalPolynomial.polyExponents : <polyFormats["exponents"]>originalPolynomial
             this.polyString = "";
             this.polyCoefficients = [];
             this.polyExponents = exps;
@@ -213,12 +213,3 @@ export class Polynomial {
         return this.polyCoefficients.every(val => val === 0);
     }
 }
- /*
-101
-  0
-101
-
-10100
-  101
-10001
-*/

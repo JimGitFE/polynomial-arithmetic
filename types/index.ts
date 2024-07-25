@@ -1,14 +1,13 @@
-import { Polynomial } from "../arithmetic"
-import { FieldPolynomial } from "../galois-field-arithmetic";
-import { polyFormats } from "./enums";
+import type { Polynomial } from "../arithmetic"
+import type { FieldPolynomial } from "../galois-field-arithmetic";
 
 /**
  * Accepted parameter polynomial types in arithmetic methods.
  */
 interface PolynomialParameters {
-    polyString: polyString;
-    polyCoefficients: polyCoefficients;
-    polyExponents: polyExponents;
+    polyString: polyFormats['string'];
+    polyCoefficients: polyFormats["coefficients"];
+    polyExponents: polyFormats["exponents"];
     Polynomial: Polynomial;
 }
 
@@ -16,9 +15,9 @@ interface PolynomialParameters {
  * Accepted parameter polynomial types in finite field arithmetic methods.
  */
 interface FieldPolynomialParameters {
-    polyString: polyString;
-    polyCoefficients: polyCoefficients;
-    polyExponents: polyExponents;
+    polyString: polyFormats['string'];
+    polyCoefficients: polyFormats["coefficients"];
+    polyExponents: polyFormats["exponents"];
     FieldPolynomial: FieldPolynomial;
 }
 
@@ -29,7 +28,7 @@ interface FieldPolynomialParameters {
  */
 interface PolynomialConstructorParameters {
     skipFormat?: boolean, 
-    polyType?: polyFormats
+    polyType?: keyof polyFormats
 }
 
 export { PolynomialParameters, FieldPolynomialParameters, PolynomialConstructorParameters }
