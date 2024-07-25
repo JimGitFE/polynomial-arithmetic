@@ -3,6 +3,12 @@
 ```
 # npm
 > npm i polynomial-arithmetic
+
+# pnpm
+> pnpm add polynomial-arithmetic
+
+# yarn
+> yarn add polynomial-arithmetic
 ```
 
 Library for performing polynomial arithmetic operations, designed in the context of polynomials in the Galois Field (GF). Test for primitiveness, irreducibility and setwise coprime taps, find the greatest common divisor polynomial besides multiplication, addition, subtraction, division and derivative.
@@ -12,6 +18,8 @@ Main use cases: Maximum length sequence (m-sequence) polynomial taps in Linear F
 ## Arithmetic Methods
 
 ```typescript
+import { Polynomial } from "polynomial-arithmetic"
+
 // Addition
 const addend = new Polynomial("8x^4+32x-12");
 const sum = addend.add("-x^5-16x+6")
@@ -48,6 +56,8 @@ This long division method is optimized by computing the modulus (number) of inte
 
 ## Finite Fields - Galois Field (GF) Methods
 ```typescript
+import { FieldPolynomial } from "polynomial-arithmetic"
+
 // Division
 const dividend = new FieldPolynomial('x^9 + x^8 + x^7 + x^5 + x^4 + x^1 + 1');
 const {quotient, remainder} = dividend.divide('x^4 + x^1 + 1');
@@ -81,6 +91,8 @@ note: 2^53 - 1 highest integer before loosing precision
 
 ### Irreducibility:
 ```typescript
+import { FieldPolynomial } from "polynomial-arithmetic"
+
 const polynomial = new FieldPolynomial('x^4 + x^3 + x^2 + x + 1')
 console.log(polynomial.isIrreducible()) // true
 ```
@@ -95,6 +107,8 @@ Otherwise, brute force every possible divisor in F(2<sup>n</sup>), if none divid
 
 ### Primitiveness:
 ```typescript
+import { FieldPolynomial } from "polynomial-arithmetic"
+
 const polynomial = new FieldPolynomial('x^7 + x^6 + 1')
 console.log(polynomial.isPrimitive()) // true
 ```
@@ -111,6 +125,8 @@ For a polynomial f(x) of degree m over GF(p) (where p is prime) to be primtive, 
 ## Feedback Polynomials [![JSON](https://img.shields.io/badge/Feedback_Polynomials-JSON-blue)](https://gist.github.com/JimGitFE/6fa73d23cdbbd8d41c45d55f9f1527ac)
 
 ```typescript
+import { FieldPolynomial } from "polynomial-arithmetic"
+
 // Generate High Degree LFSR Feddback shift register Polynomial
 const gateTapsPoly = new FieldPolynomial("x^13 + x^12 + x^11 + x^8 + 1");
 

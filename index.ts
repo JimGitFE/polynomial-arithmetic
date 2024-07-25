@@ -12,10 +12,10 @@ import { filterDuplicates, arrayMax } from "./utils/polynomial"
  * Internal usage math & formatting utilities
 */
 const utils = {
-    removeLZero, polyReformat,
-    gcd, lcm, arrayGcd, eea, isAllZero, polyGcd,
-    isPrime, powerMod, mod,
-    filterDuplicates, arrayMax
+    removeLZero, polyReformat, // formatter
+    gcd, lcm, arrayGcd, eea, isAllZero, polyGcd, // gcd
+    isPrime, powerMod, mod, // math
+    filterDuplicates, arrayMax // polynomial
 }
 
 export { Polynomial, FieldPolynomial, utils }
