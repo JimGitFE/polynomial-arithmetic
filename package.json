@@ -25,7 +25,7 @@
     "multiplication",
     "division"
   ],
-  "author": "",
+  "author": "JimGitFE",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.12.7",
